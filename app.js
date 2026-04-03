@@ -557,14 +557,21 @@ function toggleFavoriteAt(index) {
 function updateFavoriteButton() {
     const btn = document.querySelector('.btn-favorite');
     if (!btn) return;
-    
+
     const words = getCurrentUnitWords();
     const word = words[state.currentWordIndex];
     if (!word) return;
-    
+
     const key = getWordKey(word);
     const isFavorite = state.favorites.some(f => f.key === key);
     btn.textContent = isFavorite ? '★' : '☆';
+    
+    // 添加/移除 active 类以触发 CSS 动画
+    if (isFavorite) {
+        btn.classList.add('active');
+    } else {
+        btn.classList.remove('active');
+    }
 }
 
 function renderFavorites() {
@@ -1132,6 +1139,30 @@ function updateProgressBars() {
             </div>
         `;
     }).join('');
+}
+
+// ==================== 单元进度 ====================
+function updateUnitProgress() {
+    const words = getCurrentUnitWords();
+    const percentEl = document.getElementById('unit-progress-percent');
+    const detailEl = document.getElementById('unit-progress-detail');
+    const ringFill = document.querySelector('.progress-ring-fill');
+    
+    if (!percentEl || !detailEl) return;
+    
+    const learnedCount = getLearnedCount(state.currentUnit);
+    const totalCount = words.length;
+    const percent = totalCount > 0 ? Math.round((learnedCount / totalCount) * 100) : 0;
+    
+    percentEl.textContent = percent + '%';
+    detailEl.textContent = `已学 ${learnedCount} / 共 ${totalCount} 词`;
+    
+    // 更新环形进度条
+    if (ringFill) {
+        const circumference = 2 * Math.PI * 36; // r=36
+        const offset = circumference - (percent / 100) * circumference;
+        ringFill.style.strokeDashoffset = offset;
+    }
 }
 
 function getLearnedCount(unitIndex) {
