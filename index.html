@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小学英语同步学习平台 - 人教版 | 外研社版 | 通用版</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎓 小学英语同步学习平台</h1>
+                <p class="subtitle">同步教材 · 单元学习 · 智能测评 · 学习统计</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="theme-toggle" title="切换夜间模式">🌙</button>
+                <button class="btn-icon" id="favorites-btn" title="我的收藏">⭐ 收藏</button>
+                <button class="btn-icon" id="stats-btn" title="学习统计">📊 统计</button>
+            </div>
+        </header>
+
+        <!-- 版本和年级选择 -->
+        <div class="control-panel">
+            <div class="version-selector">
+                <label>📚 教材版本:</label>
+                <select id="version-select">
+                    <option value="pep">人教版 PEP (三年级起点)</option>
+                    <option value="waiyan">外研社版 (一年级起点)</option>
+                    <option value="general">通用大纲版 (1-6 年级)</option>
+                </select>
+                <span id="version-desc" class="version-description"></span>
+            </div>
+            <div class="grade-selector">
+                <label>📖 年级:</label>
+                <div class="grade-buttons" id="grade-buttons">
+                    <button class="grade-btn active" data-grade="3">三年级</button>
+                    <button class="grade-btn" data-grade="4">四年级</button>
+                    <button class="grade-btn" data-grade="5">五年级</button>
+                    <button class="grade-btn" data-grade="6">六年级</button>
+                </div>
+            </div>
+            <div class="semester-selector" id="semester-selector">
+                <label>📅 学期:</label>
+                <button class="semester-btn active" data-semester="1">上册</button>
+                <button class="semester-btn" data-semester="2">下册</button>
+            </div>
+        </div>
+
+        <!-- 单元导航 -->
+        <div class="unit-nav" id="unit-nav">
+            <h3>📋 选择单元:</h3>
+            <div class="unit-buttons" id="unit-buttons"></div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-container">
+            <!-- 侧边栏：学习模式 -->
+            <aside class="sidebar">
+                <nav class="mode-nav">
+                    <button class="mode-btn active" data-mode="words">
+                        <span class="mode-icon">📚</span>
+                        <span class="mode-text">单词学习</span>
+                    </button>
+                    <button class="mode-btn" data-mode="texts">
+                        <span class="mode-icon">📖</span>
+                        <span class="mode-text">课文朗读</span>
+                    </button>
+                    <button class="mode-btn" data-mode="dictation">
+                        <span class="mode-icon">✍️</span>
+                        <span class="mode-text">单词听写</span>
+                    </button>
+                    <button class="mode-btn" data-mode="test">
+                        <span class="mode-icon">📝</span>
+                        <span class="mode-text">单元测试</span>
+                    </button>
+                    <button class="mode-btn" data-mode="tags">
+                        <span class="mode-icon">🏷️</span>
+                        <span class="mode-text">标签分类</span>
+                    </button>
+                </nav>
+
+                <!-- 当前单元信息 -->
+                <div class="unit-info">
+                    <h4>当前单元</h4>
+                    <p id="current-unit-name">Unit 1 Hello!</p>
+                    <div class="unit-progress">
+                        <div class="progress-ring">
+                            <svg width="80" height="80">
+                                <circle class="progress-ring-bg" cx="40" cy="40" r="36"></circle>
+                                <circle class="progress-ring-fill" cx="40" cy="40" r="36"></circle>
+                            </svg>
+                            <span class="progress-percent" id="unit-progress-percent">0%</span>
+                        </div>
+                        <p class="progress-detail" id="unit-progress-detail">已学 0 / 共 0 词</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 主内容区 -->
+            <main class="content-area">
+                <!-- 单词学习模式 -->
+                <section class="content-section active" id="words-section">
+                    <div class="word-list-header">
+                        <h3 id="word-list-title">Unit 1 单词表</h3>
+                        <div class="word-list-actions">
+                            <button class="btn-action" onclick="toggleWordList()">📋 列表视图</button>
+                            <button class="btn-action" onclick="playAllWords()">🔊 连读全部</button>
+                            <button class="btn-action" onclick="printWordList()">🖨️ 打印单词表</button>
+                        </div>
+                    </div>
+
+                    <!-- 单词卡片视图 -->
+                    <div class="word-card-view" id="word-card-view">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                            <span class="progress-text">1 / 10</span>
+                        </div>
+
+                        <div class="word-card">
+                            <div class="word-header">
+                                <span class="word-index">1</span>
+                                <button class="btn-favorite" onclick="toggleFavorite()">☆</button>
+                            </div>
+                            <div class="word-display">
+                                <h2 class="english-word">Hello</h2>
+                                <p class="phonetic">/həˈloʊ/</p>
+                                <p class="chinese-meaning">你好</p>
+                                <div class="word-tags"></div>
+                            </div>
+
+                            <div class="word-actions">
+                                <button class="btn-speak" onclick="speakWord()">🔊 朗读单词</button>
+                                <button class="btn-example" onclick="showExample()">💡 例句</button>
+                            </div>
+
+                            <div class="example-sentence" style="display: none;">
+                                <p class="sentence-en">Hello, how are you?</p>
+                                <p class="sentence-cn">你好，你好吗？</p>
+                                <button class="btn-speak-small" onclick="speakSentence()">🔊</button>
+                            </div>
+                        </div>
+
+                        <div class="navigation">
+                            <button class="nav-btn prev" onclick="prevWord()">← 上一个</button>
+                            <button class="nav-btn next" onclick="nextWord()">下一个 →</button>
+                        </div>
+                    </div>
+
+                    <!-- 单词列表视图（默认隐藏） -->
+                    <div class="word-list-view" id="word-list-view" style="display: none;">
+                        <table class="word-table">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>单词</th>
+                                    <th>音标</th>
+                                    <th>中文</th>
+                                    <th>标签</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="word-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 课文朗读模式 -->
+                <section class="content-section" id="texts-section" style="display: none;">
+                    <div class="text-nav">
+                        <h3>📖 选择课文:</h3>
+                        <select id="text-select"></select>
+                    </div>
+
+                    <div class="text-content">
+                        <h3 id="text-title"></h3>
+                        <div class="text-body" id="text-body"></div>
+                        <div class="text-actions">
+                            <button class="btn-speak-full" onclick="speakFullText()">🔊 朗读全文</button>
+                            <button class="btn-action" onclick="printText()">🖨️ 打印课文</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 单词听写模式 -->
+                <section class="content-section" id="dictation-section" style="display: none;">
+                    <div class="dictation-container">
+                        <h3>✍️ 单词听写</h3>
+                        <p class="dictation-instruction">听发音，写出正确的单词拼写</p>
+                        
+                        <div class="dictation-controls">
+                            <button class="btn-dictation" onclick="startDictation()">▶️ 开始听写</button>
+                            <button class="btn-dictation" onclick="playDictationWord()">🔊 播放发音</button>
+                            <button class="btn-dictation" onclick="showDictationAnswer()">💡 显示答案</button>
+                        </div>
+
+                        <div class="dictation-area">
+                            <div class="dictation-progress">
+                                <span>第 <strong id="dictation-num">1</strong> / <strong id="dictation-total">10</strong> 词</span>
+                            </div>
+                            <input type="text" class="dictation-input" id="dictation-input" placeholder="输入你听到的单词..." autocomplete="off">
+                            <div class="dictation-feedback" id="dictation-feedback"></div>
+                            <div class="dictation-answer" id="dictation-answer" style="display: none;"></div>
+                        </div>
+
+                        <div class="dictation-result" id="dictation-result" style="display: none;">
+                            <h4>听写完成！</h4>
+                            <p>正确率：<strong id="dictation-accuracy">0%</strong></p>
+                            <p>正确数：<strong id="dictation-correct">0</strong> / <strong id="dictation-all">0</strong></p>
+                            <button class="btn-action" onclick="startDictation()">重新听写</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 单元测试模式 -->
+                <section class="content-section" id="test-section" style="display: none;">
+                    <div class="test-header">
+                        <h3>📝 单元测试</h3>
+                        <div class="test-info">
+                            <span>得分：<strong id="score">0</strong></span>
+                            <span>题目：<strong id="question-num">1</strong>/10</span>
+                        </div>
+                    </div>
+
+                    <div class="test-card">
+                        <h4 id="test-question">请听发音，选择正确的中文意思</h4>
+                        <button class="btn-listen" onclick="playTestAudio()">🔊 播放发音</button>
+                        <div class="options" id="test-options"></div>
+                    </div>
+
+                    <div class="test-result" id="test-result" style="display: none;">
+                        <p id="result-text"></p>
+                        <button class="nav-btn" onclick="nextQuestion()">下一题</button>
+                    </div>
+
+                    <div class="test-final-result" id="test-final-result" style="display: none;">
+                        <h4>🎉 测试完成！</h4>
+                        <div class="final-score">
+                            <span class="score-number" id="final-score">100</span>
+                            <span class="score-label">分</span>
+                        </div>
+                        <p id="final-comment">太棒了！</p>
+                        <button class="btn-action" onclick="initTest()">重新测试</button>
+                    </div>
+                </section>
+
+                <!-- 标签分类模式 -->
+                <section class="content-section" id="tags-section" style="display: none;">
+                    <div class="tags-filter">
+                        <h3>🏷️ 按标签筛选单词</h3>
+                        <div class="tags-list" id="tags-list"></div>
+                    </div>
+                    <div class="tagged-words" id="tagged-words">
+                        <p class="tag-hint">点击标签查看对应单词</p>
+                    </div>
+                </section>
+
+                <!-- 收藏列表 -->
+                <section class="content-section" id="favorites-section" style="display: none;">
+                    <h3>⭐ 我的收藏</h3>
+                    <div class="favorites-list" id="favorites-list">
+                        <p class="empty-hint">暂无收藏单词</p>
+                    </div>
+                </section>
+
+                <!-- 学习统计 -->
+                <section class="content-section" id="stats-section" style="display: none;">
+                    <h3>📊 学习统计</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>学习时长</h4>
+                            <p class="stat-value" id="stat-study-time">0 分钟</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>已学单词</h4>
+                            <p class="stat-value" id="stat-words-learned">0 词</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>听写正确率</h4>
+                            <p class="stat-value" id="stat-dictation-rate">0%</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>测试平均分</h4>
+                            <p class="stat-value" id="stat-test-avg">0 分</p>
+                        </div>
+                    </div>
+                    <div class="stats-chart">
+                        <h4>学习进度</h4>
+                        <div class="progress-bars" id="progress-bars"></div>
+                    </div>
+                    <button class="btn-action" onclick="resetStats()">🔄 重置统计</button>
+                </section>
+            </main>
+        </div>
+
+        <!-- 设置面板 -->
+        <div class="settings-panel">
+            <h4>⚙️ 设置</h4>
+            <div class="setting-grid">
+                <div class="setting-item">
+                    <label>朗读速度:</label>
+                    <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="0.8">
+                    <span id="rate-value">0.8</span>
+                </div>
+                <div class="setting-item">
+                    <label>选择语音:</label>
+                    <select id="voice-select"><option value="">默认语音</option></select>
+                </div>
+                <div class="setting-item">
+                    <label>学习进度:</label>
+                    <button class="btn-reset" onclick="resetProgress()">🔄 重置进度</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>2026 小学英语同步学习平台 | 支持人教版 | 外研社版 | 通用版 | 免费教育软件</p>
+        </footer>
+    </div>
+
+    <!-- 数据文件 -->
+    <script src="versions/pep.js"></script>
+    <script src="versions/waiyan.js"></script>
+    <script src="versions/general.js"></script>
+    <!-- 主应用 -->
+    <script src="app.js"></script>
+</body>
+</html>
