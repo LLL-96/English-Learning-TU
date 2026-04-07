@@ -25,14 +25,22 @@ const state = {
     testScore: 0,
     currentQuestion: 1,
     currentTestWord: null,
-    
+
     // 听写状态
     dictationIndex: 0,
     dictationWords: [],
     dictationResults: [],
-    
+
     // 夜间模式
-    darkMode: false
+    darkMode: false,
+    
+    // 语音偏好
+    accent: 'auto',
+    
+    // 拼写练习状态
+    spellingIndex: 0,
+    spellingWords: [],
+    spellingResults: []
 };
 
 let synth = window.speechSynthesis;
@@ -190,6 +198,16 @@ function setupEventListeners() {
         });
     }
 
+    // 语音类型选择
+    const accentSelect = document.getElementById('accent-select');
+    if (accentSelect) {
+        accentSelect.addEventListener('change', function() {
+            state.accent = this.value;
+            localStorage.setItem('englishCS-accent', this.value);
+            loadVoices(); // 重新加载语音列表
+        });
+    }
+
     // 夜间模式
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
@@ -228,10 +246,15 @@ function updateVersionDisplay() {
         versionDesc.textContent = versionData.description;
     }
 
-    // 所有版本都显示学期选择
+    // 根据版本数据显示学期选择器
     const semesterSelector = document.getElementById('semester-selector');
     if (semesterSelector) {
-        semesterSelector.style.display = 'flex';
+        // 外研社版和通用大纲版有上下册区分，人教版没有
+        if (state.currentVersion === 'waiyan' || state.currentVersion === 'general') {
+            semesterSelector.style.display = 'flex';
+        } else {
+            semesterSelector.style.display = 'none';
+        }
     }
 }
 
@@ -335,6 +358,9 @@ function switchMode(mode) {
             break;
         case 'test':
             initTest();
+            break;
+        case 'spelling':
+            initSpelling();
             break;
         case 'tags':
             renderTagsList();
@@ -677,21 +703,38 @@ function printWordList() {
 function loadVoices() {
     state.voices = synth.getVoices();
     const voiceSelect = document.getElementById('voice-select');
-    
-    if (!voiceSelect) return;
-    
+    const accentSelect = document.getElementById('accent-select');
+
+    if (!voiceSelect || !accentSelect) return;
+
+    // 加载保存的语音偏好
+    const savedAccent = localStorage.getItem('englishCS-accent');
+    if (savedAccent) {
+        state.accent = savedAccent;
+        accentSelect.value = savedAccent;
+    }
+
+    // 清空并重新填充语音列表
     voiceSelect.innerHTML = '<option value="">默认语音</option>';
+
+    // 根据选择的语音类型过滤
+    const selectedAccent = accentSelect.value || 'auto';
+    let filteredVoices = state.voices;
     
-    // 过滤英语语音
-    const englishVoices = state.voices.filter(v => v.lang && v.lang.startsWith('en'));
-    
-    englishVoices.forEach((voice, index) => {
+    if (selectedAccent !== 'auto') {
+        filteredVoices = state.voices.filter(v => v.lang && v.lang.startsWith(selectedAccent));
+    } else {
+        // 自动选择：优先显示英语语音
+        filteredVoices = state.voices.filter(v => v.lang && v.lang.startsWith('en'));
+    }
+
+    filteredVoices.forEach((voice, index) => {
         const option = document.createElement('option');
         option.value = state.voices.indexOf(voice);
         option.textContent = `${voice.name} (${voice.lang})`;
         voiceSelect.appendChild(option);
     });
-    
+
     if (synth.onvoiceschanged !== undefined) {
         synth.onvoiceschanged = loadVoices;
     }
@@ -701,26 +744,36 @@ function speak(text) {
     if (synth.speaking) {
         synth.cancel();
     }
-    
+
     const utterance = new SpeechSynthesisUtterance(text);
     const rateInput = document.getElementById('rate');
     const voiceSelect = document.getElementById('voice-select');
-    
+
     utterance.rate = rateInput ? parseFloat(rateInput.value) : 0.8;
     utterance.pitch = 1;
     utterance.volume = 1;
-    
+
+    // 优先使用用户选择的语音
     const voiceIndex = voiceSelect ? voiceSelect.value : '';
     if (voiceIndex !== '' && state.voices[voiceIndex]) {
         utterance.voice = state.voices[voiceIndex];
     } else {
-        // 默认使用英语语音
-        const englishVoice = state.voices.find(v => v.lang && v.lang.startsWith('en'));
+        // 根据语音偏好选择语音
+        const englishVoice = state.voices.find(v => {
+            if (state.accent === 'en-US') {
+                return v.lang && v.lang.startsWith('en-US');
+            } else if (state.accent === 'en-GB') {
+                return v.lang && v.lang.startsWith('en-GB');
+            } else {
+                // 自动选择：任意英语语音
+                return v.lang && v.lang.startsWith('en');
+            }
+        });
         if (englishVoice) {
             utterance.voice = englishVoice;
         }
     }
-    
+
     synth.speak(utterance);
 }
 
@@ -1117,18 +1170,18 @@ function updateStats() {
 function updateProgressBars() {
     const container = document.getElementById('progress-bars');
     if (!container) return;
-    
+
     const gradeData = getCurrentGradeData();
     if (!gradeData || !gradeData.units) {
         container.innerHTML = '<p class="empty-hint">暂无数据</p>';
         return;
     }
-    
+
     container.innerHTML = gradeData.units.map((unit, index) => {
         const wordCount = unit.words ? unit.words.length : 0;
         const learnedCount = getLearnedCount(index);
         const percent = wordCount > 0 ? Math.round((learnedCount / wordCount) * 100) : 0;
-        
+
         return `
             <div class="unit-progress-bar">
                 <span class="unit-name">${unit.unitId}</span>
@@ -1139,6 +1192,66 @@ function updateProgressBars() {
             </div>
         `;
     }).join('');
+}
+
+// ==================== 导出学习进度 ====================
+function exportProgress() {
+    const studyTime = Math.round(state.studyStats.studyTime / 60);
+    const wordsLearned = state.studyStats.wordsLearned;
+
+    // 听写统计
+    const dictationHistory = state.studyStats.dictationHistory;
+    const dictationRate = dictationHistory.length > 0 
+        ? Math.round(dictationHistory.reduce((sum, h) => sum + h.accuracy, 0) / dictationHistory.length)
+        : 0;
+
+    // 测试统计
+    const testHistory = state.studyStats.testHistory;
+    const testAvg = testHistory.length > 0
+        ? Math.round(testHistory.reduce((sum, h) => sum + h.score, 0) / testHistory.length)
+        : 0;
+
+    // 构建导出数据
+    const exportData = {
+        exportDate: new Date().toLocaleString('zh-CN'),
+        appVersion: 'v2.0',
+        studyStats: {
+            studyTime: studyTime + ' 分钟',
+            wordsLearned: wordsLearned + ' 词',
+            dictationRate: dictationRate + '%',
+            dictationAttempts: dictationHistory.length,
+            testAverage: testAvg + ' 分',
+            testCount: testHistory.length
+        },
+        currentProgress: {
+            version: state.currentVersion,
+            grade: state.currentGrade,
+            semester: state.currentSemester === 1 ? '上册' : '下册',
+            currentUnit: getCurrentUnitData()?.unitName || '未知'
+        },
+        favorites: state.favorites.map(f => ({
+            word: f.word,
+            meaning: f.meaning,
+            unit: f.unit,
+            addedAt: new Date(f.addedAt).toLocaleString('zh-CN')
+        }))
+    };
+
+    // 转换为 JSON 字符串
+    const jsonData = JSON.stringify(exportData, null, 2);
+
+    // 创建下载链接
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `学习进度_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert('✅ 学习进度已导出为 JSON 文件！');
 }
 
 // ==================== 单元进度 ====================
@@ -1287,6 +1400,232 @@ window.addEventListener('beforeunload', () => {
     saveToStorage();
 });
 
+// ==================== 拼写练习 ====================
+function initSpelling() {
+    const words = getCurrentUnitWords();
+    state.spellingWords = [...words].sort(() => Math.random() - 0.5);
+    state.spellingIndex = 0;
+    state.spellingResults = [];
+
+    const spellingTotal = document.getElementById('spelling-total');
+    if (spellingTotal) {
+        spellingTotal.textContent = Math.min(10, state.spellingWords.length);
+    }
+
+    const spellingResult = document.getElementById('spelling-result');
+    const spellingArea = document.querySelector('.spelling-area');
+    if (spellingResult) spellingResult.style.display = 'none';
+    if (spellingArea) spellingArea.style.display = 'block';
+}
+
+function startSpelling() {
+    initSpelling();
+    const spellingNum = document.getElementById('spelling-num');
+    if (spellingNum) spellingNum.textContent = '1';
+
+    const spellingInput = document.getElementById('spelling-input');
+    if (spellingInput) {
+        spellingInput.value = '';
+        spellingInput.disabled = false;
+        spellingInput.focus();
+    }
+
+    const spellingFeedback = document.getElementById('spelling-feedback');
+    if (spellingFeedback) {
+        spellingFeedback.textContent = '';
+        spellingFeedback.className = 'spelling-feedback';
+    }
+
+    const spellingHint = document.getElementById('spelling-hint');
+    if (spellingHint) spellingHint.style.display = 'none';
+
+    const spellingMeaning = document.getElementById('spelling-meaning');
+    if (spellingMeaning) spellingMeaning.textContent = '';
+
+    // 自动播放第一个单词
+    setTimeout(() => playSpellingWord(), 500);
+}
+
+function playSpellingWord() {
+    if (state.spellingIndex >= state.spellingWords.length) {
+        showSpellingResult();
+        return;
+    }
+
+    const word = state.spellingWords[state.spellingIndex];
+    speak(word.word);
+
+    // 显示中文意思作为提示
+    const spellingMeaning = document.getElementById('spelling-meaning');
+    if (spellingMeaning) {
+        spellingMeaning.textContent = `💭 ${word.meaning}`;
+    }
+
+    const spellingNum = document.getElementById('spelling-num');
+    if (spellingNum) {
+        spellingNum.textContent = state.spellingIndex + 1;
+    }
+}
+
+function playSpellingSlow() {
+    if (state.spellingIndex >= state.spellingWords.length) {
+        return;
+    }
+
+    const word = state.spellingWords[state.spellingIndex];
+    
+    if (synth.speaking) {
+        synth.cancel();
+    }
+
+    const utterance = new SpeechSynthesisUtterance(word.word);
+    utterance.rate = 0.5; // 更慢的语速
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // 使用与 speak 函数相同的语音选择逻辑
+    const voiceSelect = document.getElementById('voice-select');
+    const voiceIndex = voiceSelect ? voiceSelect.value : '';
+    if (voiceIndex !== '' && state.voices[voiceIndex]) {
+        utterance.voice = state.voices[voiceIndex];
+    } else {
+        const englishVoice = state.voices.find(v => {
+            if (state.accent === 'en-US') {
+                return v.lang && v.lang.startsWith('en-US');
+            } else if (state.accent === 'en-GB') {
+                return v.lang && v.lang.startsWith('en-GB');
+            } else {
+                return v.lang && v.lang.startsWith('en');
+            }
+        });
+        if (englishVoice) {
+            utterance.voice = englishVoice;
+        }
+    }
+
+    synth.speak(utterance);
+}
+
+function checkSpellingAnswer() {
+    const spellingInput = document.getElementById('spelling-input');
+    const spellingFeedback = document.getElementById('spelling-feedback');
+    const spellingHint = document.getElementById('spelling-hint');
+
+    if (!spellingInput || !spellingFeedback) return;
+
+    const userAnswer = spellingInput.value.trim().toLowerCase();
+    const correctWord = state.spellingWords[state.spellingIndex];
+
+    if (!correctWord) return;
+
+    const isCorrect = userAnswer === correctWord.word.toLowerCase();
+    state.spellingResults.push(isCorrect);
+
+    if (isCorrect) {
+        spellingFeedback.textContent = '✅ 正确！拼写完全正确！';
+        spellingFeedback.className = 'spelling-feedback correct';
+    } else {
+        spellingFeedback.textContent = `❌ 错误`;
+        spellingFeedback.className = 'spelling-feedback wrong';
+        if (spellingHint) {
+            spellingHint.innerHTML = `正确答案：<strong>${correctWord.word}</strong> ${correctWord.phonetic}`;
+            spellingHint.style.display = 'block';
+        }
+    }
+
+    spellingInput.disabled = true;
+
+    // 自动进入下一个
+    setTimeout(() => {
+        state.spellingIndex++;
+
+        if (state.spellingIndex >= state.spellingWords.length ||
+            state.spellingIndex >= 10) {
+            showSpellingResult();
+        } else {
+            spellingInput.value = '';
+            spellingInput.disabled = false;
+            spellingInput.focus();
+            spellingFeedback.textContent = '';
+            if (spellingHint) spellingHint.style.display = 'none';
+            playSpellingWord();
+        }
+    }, 2000);
+}
+
+function showSpellingHint() {
+    const word = state.spellingWords[state.spellingIndex];
+    const spellingHint = document.getElementById('spelling-hint');
+    
+    if (spellingHint && word) {
+        // 显示单词的首字母和长度
+        const firstLetter = word.word.charAt(0);
+        const length = word.word.length;
+        const masked = firstLetter + '_'.repeat(length - 1);
+        spellingHint.innerHTML = `💡 提示：<strong>${masked}</strong>（${length} 个字母）`;
+        spellingHint.style.display = 'block';
+    }
+}
+
+function showSpellingResult() {
+    const spellingArea = document.querySelector('.spelling-area');
+    const spellingResult = document.getElementById('spelling-result');
+
+    if (spellingArea) spellingArea.style.display = 'none';
+    if (spellingResult) spellingResult.style.display = 'block';
+
+    const correctCount = state.spellingResults.filter(r => r).length;
+    const totalCount = state.spellingResults.length;
+    const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+
+    const accuracyEl = document.getElementById('spelling-accuracy');
+    const correctEl = document.getElementById('spelling-correct');
+    const allEl = document.getElementById('spelling-all');
+    const reviewEl = document.getElementById('spelling-review');
+
+    if (accuracyEl) accuracyEl.textContent = accuracy + '%';
+    if (correctEl) correctEl.textContent = correctCount;
+    if (allEl) allEl.textContent = totalCount;
+
+    // 显示错误的单词回顾
+    if (reviewEl) {
+        const wrongWords = state.spellingResults
+            .map((result, index) => {
+                if (!result) {
+                    const word = state.spellingWords[index];
+                    return word ? `<div class="review-item wrong">
+                        <span class="review-word">${word.word}</span>
+                        <span class="review-meaning">${word.meaning}</span>
+                    </div>` : '';
+                }
+                return '';
+            })
+            .filter(Boolean)
+            .join('');
+
+        if (wrongWords) {
+            reviewEl.innerHTML = `<h5>需要复习的单词：</h5>${wrongWords}`;
+        } else {
+            reviewEl.innerHTML = '<p class="perfect-score">🎉 太棒了！全部正确！</p>';
+        }
+    }
+
+    // 保存拼写练习结果
+    saveToStorage();
+}
+
+// 拼写输入框事件监听
+document.addEventListener('DOMContentLoaded', function() {
+    const spellingInput = document.getElementById('spelling-input');
+    if (spellingInput) {
+        spellingInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSpellingAnswer();
+            }
+        });
+    }
+});
+
 // 暴露全局函数供 HTML 调用
 window.speakWord = speakWord;
 window.speakSentence = speakSentence;
@@ -1314,3 +1653,8 @@ window.initTest = initTest;
 window.selectWord = selectWord;
 window.resetStats = resetStats;
 window.resetProgress = resetProgress;
+window.startSpelling = startSpelling;
+window.playSpellingWord = playSpellingWord;
+window.playSpellingSlow = playSpellingSlow;
+window.showSpellingHint = showSpellingHint;
+window.exportProgress = exportProgress;

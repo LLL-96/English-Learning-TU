@@ -52,7 +52,7 @@
                     <button class="grade-btn" data-grade="6">六年级</button>
                 </div>
             </div>
-            <div class="semester-selector" id="semester-selector">
+            <div class="semester-selector" id="semester-selector" style="display: none;">
                 <label>📅 学期:</label>
                 <button class="semester-btn active" data-semester="1">上册</button>
                 <button class="semester-btn" data-semester="2">下册</button>
@@ -85,6 +85,10 @@
                     <button class="mode-btn" data-mode="test">
                         <span class="mode-icon">📝</span>
                         <span class="mode-text">单元测试</span>
+                    </button>
+                    <button class="mode-btn" data-mode="spelling">
+                        <span class="mode-icon">✏️</span>
+                        <span class="mode-text">拼写练习</span>
                     </button>
                     <button class="mode-btn" data-mode="tags">
                         <span class="mode-icon">🏷️</span>
@@ -256,6 +260,39 @@
                     </div>
                 </section>
 
+                <!-- 拼写练习模式 -->
+                <section class="content-section" id="spelling-section" style="display: none;">
+                    <div class="spelling-container">
+                        <h3>✏️ 拼写练习</h3>
+                        <p class="spelling-instruction">听发音，拼写出正确的单词</p>
+
+                        <div class="spelling-controls">
+                            <button class="btn-spelling" onclick="startSpelling()">▶️ 开始练习</button>
+                            <button class="btn-spelling" onclick="playSpellingWord()">🔊 播放发音</button>
+                            <button class="btn-spelling" onclick="playSpellingSlow()">🐌 慢速播放</button>
+                            <button class="btn-spelling" onclick="showSpellingHint()">💡 提示</button>
+                        </div>
+
+                        <div class="spelling-area">
+                            <div class="spelling-progress">
+                                <span>第 <strong id="spelling-num">1</strong> / <strong id="spelling-total">10</strong> 词</span>
+                            </div>
+                            <div class="spelling-meaning" id="spelling-meaning"></div>
+                            <input type="text" class="spelling-input" id="spelling-input" placeholder="输入你听到的单词..." autocomplete="off">
+                            <div class="spelling-feedback" id="spelling-feedback"></div>
+                            <div class="spelling-hint" id="spelling-hint" style="display: none;"></div>
+                        </div>
+
+                        <div class="spelling-result" id="spelling-result" style="display: none;">
+                            <h4>练习完成！</h4>
+                            <p>正确率：<strong id="spelling-accuracy">0%</strong></p>
+                            <p>正确数：<strong id="spelling-correct">0</strong> / <strong id="spelling-all">0</strong></p>
+                            <div class="spelling-review" id="spelling-review"></div>
+                            <button class="btn-action" onclick="startSpelling()">重新练习</button>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- 标签分类模式 -->
                 <section class="content-section" id="tags-section" style="display: none;">
                     <div class="tags-filter">
@@ -300,7 +337,10 @@
                         <h4>学习进度</h4>
                         <div class="progress-bars" id="progress-bars"></div>
                     </div>
-                    <button class="btn-action" onclick="resetStats()">🔄 重置统计</button>
+                    <div class="stats-actions">
+                        <button class="btn-action" onclick="exportProgress()">📤 导出学习进度</button>
+                        <button class="btn-action" onclick="resetStats()">🔄 重置统计</button>
+                    </div>
                 </section>
             </main>
         </div>
@@ -317,6 +357,14 @@
                 <div class="setting-item">
                     <label>选择语音:</label>
                     <select id="voice-select"><option value="">默认语音</option></select>
+                </div>
+                <div class="setting-item">
+                    <label>语音类型:</label>
+                    <select id="accent-select">
+                        <option value="auto">自动选择</option>
+                        <option value="en-US">美式英语</option>
+                        <option value="en-GB">英式英语</option>
+                    </select>
                 </div>
                 <div class="setting-item">
                     <label>学习进度:</label>
@@ -337,5 +385,20 @@
     <script src="versions/general.js"></script>
     <!-- 主应用 -->
     <script src="app.js"></script>
+    
+    <!-- 注册 Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((registration) => {
+                        console.log('[SW] 注册成功，范围:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('[SW] 注册失败:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

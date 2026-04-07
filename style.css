@@ -1651,6 +1651,217 @@ body {
     }
 }
 
+/* ========== 拼写练习 ========== */
+.spelling-container {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.spelling-container h3 {
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+.spelling-instruction {
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    font-size: 1em;
+}
+
+.spelling-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.btn-spelling {
+    padding: 12px 24px;
+    border: none;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: var(--transition);
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-spelling:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.spelling-area {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.spelling-progress {
+    margin-bottom: 24px;
+    font-size: 1.1em;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.spelling-meaning {
+    font-size: 1.5em;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+    font-weight: 700;
+}
+
+.spelling-input {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 1.5em;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: var(--transition);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+}
+
+.spelling-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+}
+
+.spelling-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.spelling-feedback {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: 700;
+    min-height: 30px;
+}
+
+.spelling-feedback.correct {
+    color: var(--success-color);
+}
+
+.spelling-feedback.wrong {
+    color: var(--danger-color);
+}
+
+.spelling-hint {
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: var(--warning-light);
+    border-radius: var(--radius-md);
+    font-size: 1em;
+    color: var(--text-primary);
+    border-left: 4px solid var(--warning-color);
+}
+
+.spelling-result {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.spelling-result h4 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.spelling-result p {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    color: var(--text-secondary);
+}
+
+.spelling-result strong {
+    color: var(--primary-color);
+    font-size: 1.3em;
+}
+
+.spelling-review {
+    margin-top: 24px;
+    text-align: left;
+}
+
+.spelling-review h5 {
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-size: 1.1em;
+}
+
+.review-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--danger-light);
+    border-radius: var(--radius-md);
+    margin-bottom: 8px;
+    border-left: 4px solid var(--danger-color);
+}
+
+.review-item.wrong {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.review-word {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.1em;
+}
+
+.review-meaning {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+}
+
+.perfect-score {
+    text-align: center;
+    font-size: 1.3em;
+    color: var(--success-color);
+    font-weight: 700;
+    padding: 20px;
+    background: var(--success-light);
+    border-radius: var(--radius-lg);
+}
+
+/* ========== 统计操作按钮 ========== */
+.stats-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 /* ========== 打印样式 ========== */
 @media print {
     body {
