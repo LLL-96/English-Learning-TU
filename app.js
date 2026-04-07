@@ -78,6 +78,17 @@ function getCurrentGradeData() {
     const versionData = getCurrentData();
     if (!versionData || !versionData.grades) return null;
 
+    // 对于人教版 PEP，根据学期选择返回对应的数据
+    if (state.currentVersion === 'pep') {
+        const gradeKey = state.currentSemester === 2 
+            ? `${state.currentGrade}-2`  // 下册
+            : state.currentGrade;         // 上册
+        const gradeData = versionData.grades[gradeKey];
+        if (!gradeData) return null;
+        return gradeData;
+    }
+
+    // 其他版本直接返回
     const gradeData = versionData.grades[state.currentGrade];
     if (!gradeData) return null;
 
@@ -249,12 +260,8 @@ function updateVersionDisplay() {
     // 根据版本数据显示学期选择器
     const semesterSelector = document.getElementById('semester-selector');
     if (semesterSelector) {
-        // 外研社版和通用大纲版有上下册区分，人教版没有
-        if (state.currentVersion === 'waiyan' || state.currentVersion === 'general') {
-            semesterSelector.style.display = 'flex';
-        } else {
-            semesterSelector.style.display = 'none';
-        }
+        // 所有版本都有上下册区分，都显示学期选择器
+        semesterSelector.style.display = 'flex';
     }
 }
 
