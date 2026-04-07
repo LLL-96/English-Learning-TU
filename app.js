@@ -40,7 +40,10 @@ const state = {
     // 拼写练习状态
     spellingIndex: 0,
     spellingWords: [],
-    spellingResults: []
+    spellingResults: [],
+    
+    // 连读状态
+    isPlayingAll: false
 };
 
 let synth = window.speechSynthesis;
@@ -260,8 +263,24 @@ function updateVersionDisplay() {
     // 根据版本数据显示学期选择器
     const semesterSelector = document.getElementById('semester-selector');
     if (semesterSelector) {
-        // 所有版本都有上下册区分，都显示学期选择器
-        semesterSelector.style.display = 'flex';
+        // 人教版 PEP 有上下册，外研社版和通用大纲版暂时只有上册
+        if (state.currentVersion === 'pep') {
+            semesterSelector.style.display = 'flex';
+        } else {
+            // 外研社版和通用大纲版暂时隐藏下册按钮
+            semesterSelector.style.display = 'flex';
+            const semesterBtns = semesterSelector.querySelectorAll('.semester-btn');
+            semesterBtns.forEach(btn => {
+                if (btn.dataset.semester === '2') {
+                    btn.style.display = 'none';
+                }
+            });
+            // 确保上册被选中
+            state.currentSemester = 1;
+            semesterBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.semester === '1');
+            });
+        }
     }
 }
 
@@ -283,12 +302,17 @@ function updateGradeButtons() {
     // 如果当前年级不在有效范围内，切换到起始年级
     if (state.currentGrade < startGrade) {
         state.currentGrade = startGrade;
-        buttons.forEach(btn => {
-            if (parseInt(btn.dataset.grade) === startGrade) {
-                btn.classList.add('active');
-            }
-        });
     }
+    
+    // 确保当前年级的按钮被激活
+    buttons.forEach(btn => {
+        const grade = parseInt(btn.dataset.grade);
+        if (grade === state.currentGrade) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
 }
 
 function updateUnitNav() {
@@ -529,18 +553,53 @@ function nextWord() {
 }
 
 function playAllWords() {
+    // 如果正在连读，则停止
+    if (state.isPlayingAll) {
+        stopPlayAll();
+        return;
+    }
+
     const words = getCurrentUnitWords();
     let index = 0;
-    
+    state.isPlayingAll = true;
+
+    // 更新按钮文本
+    updatePlayAllButton(true);
+
     function playNext() {
-        if (index < words.length) {
-            speak(words[index].word);
-            index++;
-            setTimeout(playNext, 1500);
+        if (!state.isPlayingAll || index >= words.length) {
+            state.isPlayingAll = false;
+            updatePlayAllButton(false);
+            return;
         }
+        
+        speak(words[index].word);
+        index++;
+        setTimeout(playNext, 1500);
     }
-    
+
     playNext();
+}
+
+function stopPlayAll() {
+    state.isPlayingAll = false;
+    synth.cancel();
+    updatePlayAllButton(false);
+}
+
+function updatePlayAllButton(isPlaying) {
+    const buttons = document.querySelectorAll('.word-list-actions .btn-action');
+    buttons.forEach(btn => {
+        if (btn.textContent.includes('连读')) {
+            if (isPlaying) {
+                btn.textContent = '⏹️ 停止连读';
+                btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+            } else {
+                btn.textContent = '🔊 连读全部';
+                btn.style.background = '';
+            }
+        }
+    });
 }
 
 // ==================== 收藏功能 ====================
@@ -708,11 +767,20 @@ function printWordList() {
 
 // ==================== 语音合成 ====================
 function loadVoices() {
-    state.voices = synth.getVoices();
     const voiceSelect = document.getElementById('voice-select');
     const accentSelect = document.getElementById('accent-select');
 
     if (!voiceSelect || !accentSelect) return;
+
+    // 先设置回调，再获取语音（Chrome 异步加载）
+    if (synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = loadVoices;
+    }
+
+    state.voices = synth.getVoices();
+    
+    // 如果没有语音，等待加载
+    if (state.voices.length === 0) return;
 
     // 加载保存的语音偏好
     const savedAccent = localStorage.getItem('englishCS-accent');
@@ -727,7 +795,7 @@ function loadVoices() {
     // 根据选择的语音类型过滤
     const selectedAccent = accentSelect.value || 'auto';
     let filteredVoices = state.voices;
-    
+
     if (selectedAccent !== 'auto') {
         filteredVoices = state.voices.filter(v => v.lang && v.lang.startsWith(selectedAccent));
     } else {
@@ -741,10 +809,29 @@ function loadVoices() {
         option.textContent = `${voice.name} (${voice.lang})`;
         voiceSelect.appendChild(option);
     });
+}
 
-    if (synth.onvoiceschanged !== undefined) {
-        synth.onvoiceschanged = loadVoices;
+// 获取选择的语音
+function getSelectedVoice() {
+    const voiceSelect = document.getElementById('voice-select');
+    const voiceIndex = voiceSelect ? voiceSelect.value : '';
+    
+    // 优先使用用户选择的语音
+    if (voiceIndex !== '' && state.voices[voiceIndex]) {
+        return state.voices[voiceIndex];
     }
+    
+    // 根据语音偏好选择语音
+    return state.voices.find(v => {
+        if (state.accent === 'en-US') {
+            return v.lang && v.lang.startsWith('en-US');
+        } else if (state.accent === 'en-GB') {
+            return v.lang && v.lang.startsWith('en-GB');
+        } else {
+            // 自动选择：任意英语语音
+            return v.lang && v.lang.startsWith('en');
+        }
+    });
 }
 
 function speak(text) {
@@ -754,31 +841,15 @@ function speak(text) {
 
     const utterance = new SpeechSynthesisUtterance(text);
     const rateInput = document.getElementById('rate');
-    const voiceSelect = document.getElementById('voice-select');
 
     utterance.rate = rateInput ? parseFloat(rateInput.value) : 0.8;
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    // 优先使用用户选择的语音
-    const voiceIndex = voiceSelect ? voiceSelect.value : '';
-    if (voiceIndex !== '' && state.voices[voiceIndex]) {
-        utterance.voice = state.voices[voiceIndex];
-    } else {
-        // 根据语音偏好选择语音
-        const englishVoice = state.voices.find(v => {
-            if (state.accent === 'en-US') {
-                return v.lang && v.lang.startsWith('en-US');
-            } else if (state.accent === 'en-GB') {
-                return v.lang && v.lang.startsWith('en-GB');
-            } else {
-                // 自动选择：任意英语语音
-                return v.lang && v.lang.startsWith('en');
-            }
-        });
-        if (englishVoice) {
-            utterance.voice = englishVoice;
-        }
+    // 使用公共函数获取语音
+    const voice = getSelectedVoice();
+    if (voice) {
+        utterance.voice = voice;
     }
 
     synth.speak(utterance);
@@ -892,11 +963,53 @@ function checkDictationAnswer() {
 function showDictationAnswer() {
     const dictationAnswer = document.getElementById('dictation-answer');
     const correctWord = state.dictationWords[state.dictationIndex];
-    
+
     if (dictationAnswer && correctWord) {
         dictationAnswer.textContent = `答案：${correctWord.word} ${correctWord.phonetic}`;
         dictationAnswer.style.display = 'block';
     }
+}
+
+function skipDictationWord() {
+    if (state.dictationIndex >= state.dictationWords.length) {
+        return;
+    }
+
+    const dictationInput = document.getElementById('dictation-input');
+    const dictationFeedback = document.getElementById('dictation-feedback');
+    const dictationAnswer = document.getElementById('dictation-answer');
+
+    // 标记为跳过（不算正确也不算错误）
+    state.dictationResults.push(null);
+
+    if (dictationFeedback) {
+        dictationFeedback.textContent = '⏭️ 已跳过';
+        dictationFeedback.className = 'dictation-feedback';
+    }
+
+    if (dictationInput) {
+        dictationInput.value = '';
+        dictationInput.disabled = true;
+    }
+
+    // 进入下一个
+    setTimeout(() => {
+        state.dictationIndex++;
+
+        if (state.dictationIndex >= state.dictationWords.length ||
+            state.dictationIndex >= 10) {
+            showDictationResult();
+        } else {
+            if (dictationInput) {
+                dictationInput.value = '';
+                dictationInput.disabled = false;
+                dictationInput.focus();
+            }
+            if (dictationFeedback) dictationFeedback.textContent = '';
+            if (dictationAnswer) dictationAnswer.style.display = 'none';
+            playDictationWord();
+        }
+    }, 1000);
 }
 
 function showDictationResult() {
@@ -1013,9 +1126,9 @@ function checkAnswer(selected, correct) {
     
     if (resultDiv && resultText) {
         resultDiv.style.display = 'block';
-        
+
         if (selected.meaning === correct.meaning) {
-            state.testScore += 10;
+            state.testScore++;
             const scoreEl = document.getElementById('score');
             if (scoreEl) scoreEl.textContent = state.testScore;
             resultDiv.className = 'test-result correct';
@@ -1042,29 +1155,36 @@ function nextQuestion() {
 function showTestFinalResult() {
     const testCard = document.querySelector('.test-card');
     const finalResult = document.getElementById('test-final-result');
-    
+
     if (testCard) testCard.style.display = 'none';
     if (finalResult) {
         finalResult.style.display = 'block';
+
+        // 计算百分制分数
+        const totalQuestions = state.currentQuestion;
+        const finalScore = Math.round((state.testScore / totalQuestions) * 100);
         
-        document.getElementById('final-score').textContent = state.testScore;
-        
+        document.getElementById('final-score').textContent = finalScore;
+
         let comment = '';
-        if (state.testScore >= 90) comment = '🎉 太棒了！';
-        else if (state.testScore >= 70) comment = '👍 不错哦！';
-        else if (state.testScore >= 60) comment = '💪 继续加油！';
+        if (finalScore >= 90) comment = '🎉 太棒了！';
+        else if (finalScore >= 70) comment = '👍 不错哦！';
+        else if (finalScore >= 60) comment = '💪 继续加油！';
         else comment = '📚 多多练习！';
-        
+
         document.getElementById('final-comment').textContent = comment;
     }
+
+    // 保存测试记录（使用百分制分数）
+    const totalQuestions = state.currentQuestion;
+    const finalScore = Math.round((state.testScore / totalQuestions) * 100);
     
-    // 保存测试记录
     state.studyStats.testHistory.push({
         date: Date.now(),
-        score: state.testScore,
+        score: finalScore,
         unit: getCurrentUnitData()?.unitName
     });
-    
+
     saveToStorage();
 }
 
@@ -1336,39 +1456,50 @@ function toggleDarkMode() {
 
 // ==================== 存储功能 ====================
 function saveToStorage() {
-    localStorage.setItem('englishLearningState', JSON.stringify({
-        currentVersion: state.currentVersion,
-        currentGrade: state.currentGrade,
-        currentSemester: state.currentSemester,
-        currentUnit: state.currentUnit,
-        favorites: state.favorites,
-        studyStats: state.studyStats,
-        darkMode: state.darkMode
-    }));
+    try {
+        localStorage.setItem('englishLearningState', JSON.stringify({
+            currentVersion: state.currentVersion,
+            currentGrade: state.currentGrade,
+            currentSemester: state.currentSemester,
+            currentUnit: state.currentUnit,
+            favorites: state.favorites,
+            studyStats: state.studyStats,
+            darkMode: state.darkMode,
+            accent: state.accent
+        }));
+    } catch (e) {
+        console.error('保存数据失败:', e);
+        alert('⚠️ 保存数据失败，可能是存储空间已满');
+    }
 }
 
 function loadFromStorage() {
-    const saved = localStorage.getItem('englishLearningState');
-    if (saved) {
-        try {
-            const data = JSON.parse(saved);
-            state.currentVersion = data.currentVersion || 'pep';
-            state.currentGrade = data.currentGrade || 3;
-            state.currentSemester = data.currentSemester || 1;
-            state.currentUnit = data.currentUnit || 0;
-            state.favorites = data.favorites || [];
-            state.studyStats = data.studyStats || {
-                studyTime: 0,
-                wordsLearned: 0,
-                dictationHistory: [],
-                testHistory: []
-            };
-            state.darkMode = data.darkMode || false;
-        } catch (e) {
-            console.error('加载数据失败:', e);
+    try {
+        const saved = localStorage.getItem('englishLearningState');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                state.currentVersion = data.currentVersion || 'pep';
+                state.currentGrade = data.currentGrade || 3;
+                state.currentSemester = data.currentSemester || 1;
+                state.currentUnit = data.currentUnit || 0;
+                state.favorites = data.favorites || [];
+                state.studyStats = data.studyStats || {
+                    studyTime: 0,
+                    wordsLearned: 0,
+                    dictationHistory: [],
+                    testHistory: []
+                };
+                state.darkMode = data.darkMode || false;
+                state.accent = data.accent || 'auto';
+            } catch (e) {
+                console.error('解析数据失败:', e);
+            }
         }
+    } catch (e) {
+        console.error('加载数据失败:', e);
     }
-    
+
     // 加载夜间模式
     if (state.darkMode) {
         document.body.classList.add('dark-mode');
@@ -1480,7 +1611,7 @@ function playSpellingSlow() {
     }
 
     const word = state.spellingWords[state.spellingIndex];
-    
+
     if (synth.speaking) {
         synth.cancel();
     }
@@ -1490,24 +1621,10 @@ function playSpellingSlow() {
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    // 使用与 speak 函数相同的语音选择逻辑
-    const voiceSelect = document.getElementById('voice-select');
-    const voiceIndex = voiceSelect ? voiceSelect.value : '';
-    if (voiceIndex !== '' && state.voices[voiceIndex]) {
-        utterance.voice = state.voices[voiceIndex];
-    } else {
-        const englishVoice = state.voices.find(v => {
-            if (state.accent === 'en-US') {
-                return v.lang && v.lang.startsWith('en-US');
-            } else if (state.accent === 'en-GB') {
-                return v.lang && v.lang.startsWith('en-GB');
-            } else {
-                return v.lang && v.lang.startsWith('en');
-            }
-        });
-        if (englishVoice) {
-            utterance.voice = englishVoice;
-        }
+    // 使用公共函数获取语音
+    const voice = getSelectedVoice();
+    if (voice) {
+        utterance.voice = voice;
     }
 
     synth.speak(utterance);
@@ -1572,6 +1689,48 @@ function showSpellingHint() {
         spellingHint.innerHTML = `💡 提示：<strong>${masked}</strong>（${length} 个字母）`;
         spellingHint.style.display = 'block';
     }
+}
+
+function skipSpellingWord() {
+    if (state.spellingIndex >= state.spellingWords.length) {
+        return;
+    }
+
+    const spellingInput = document.getElementById('spelling-input');
+    const spellingFeedback = document.getElementById('spelling-feedback');
+    const spellingHint = document.getElementById('spelling-hint');
+
+    // 标记为跳过
+    state.spellingResults.push(null);
+
+    if (spellingFeedback) {
+        spellingFeedback.textContent = '⏭️ 已跳过';
+        spellingFeedback.className = 'spelling-feedback';
+    }
+
+    if (spellingInput) {
+        spellingInput.value = '';
+        spellingInput.disabled = true;
+    }
+
+    // 进入下一个
+    setTimeout(() => {
+        state.spellingIndex++;
+
+        if (state.spellingIndex >= state.spellingWords.length ||
+            state.spellingIndex >= 10) {
+            showSpellingResult();
+        } else {
+            if (spellingInput) {
+                spellingInput.value = '';
+                spellingInput.disabled = false;
+                spellingInput.focus();
+            }
+            if (spellingFeedback) spellingFeedback.textContent = '';
+            if (spellingHint) spellingHint.style.display = 'none';
+            playSpellingWord();
+        }
+    }, 1000);
 }
 
 function showSpellingResult() {
@@ -1664,4 +1823,6 @@ window.startSpelling = startSpelling;
 window.playSpellingWord = playSpellingWord;
 window.playSpellingSlow = playSpellingSlow;
 window.showSpellingHint = showSpellingHint;
+window.skipSpellingWord = skipSpellingWord;
+window.skipDictationWord = skipDictationWord;
 window.exportProgress = exportProgress;
