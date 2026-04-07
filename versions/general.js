@@ -10,7 +10,7 @@ const generalData = {
   grades: {
     // ==================== 一年级 ====================
     1: {
-      semester: "全一册",
+      semester: "上册",
       units: [
         {
           unitId: "U1",
@@ -176,7 +176,7 @@ const generalData = {
     },
     // ==================== 二年级 ====================
     2: {
-      semester: "全一册",
+      semester: "上册",
       units: [
         {
           unitId: "U1",
@@ -341,7 +341,7 @@ const generalData = {
     },
     // ==================== 三年级 ====================
     3: {
-      semester: "全一册",
+      semester: "上册",
       units: [
         {
           unitId: "U1",
@@ -508,7 +508,7 @@ const generalData = {
     },
     // ==================== 四年级 ====================
     4: {
-      semester: "全一册",
+      semester: "上册",
       units: [
         {
           unitId: "U1",
@@ -672,7 +672,7 @@ const generalData = {
     },
     // ==================== 五年级 ====================
     5: {
-      semester: "全一册",
+      semester: "上册",
       units: [
         {
           unitId: "U1",
@@ -840,7 +840,7 @@ const generalData = {
     },
     // ==================== 六年级 ====================
     6: {
-      semester: "全一册",
+      semester: "上册",
       units: [
         {
           unitId: "U1",
