@@ -1473,7 +1473,9 @@ function loadFromStorage() {
             try {
                 const data = JSON.parse(saved);
                 state.currentVersion = data.currentVersion || 'pep';
-                state.currentGrade = data.currentGrade || 3;
+                // 根据版本设置正确的默认年级
+                const defaultGrade = state.currentVersion === 'pep' ? 3 : 1;
+                state.currentGrade = data.currentGrade || defaultGrade;
                 state.currentSemester = data.currentSemester || 1;
                 state.currentUnit = data.currentUnit || 0;
                 state.favorites = data.favorites || [];
