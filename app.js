@@ -133,11 +133,13 @@ function setupEventListeners() {
         state.currentGrade = this.value === 'pep' ? 3 : (this.value === 'waiyan' ? 1 : 1);
         state.currentUnit = 0;
         state.currentWordIndex = 0;
+        state.currentTextIndex = 0;
         saveToStorage();
         updateVersionDisplay();
         updateGradeButtons();
         updateUnitNav();
         updateWordDisplay();
+        updateTextDisplay();
     });
 
     // 年级选择
@@ -148,9 +150,11 @@ function setupEventListeners() {
             state.currentGrade = parseInt(this.dataset.grade);
             state.currentUnit = 0;
             state.currentWordIndex = 0;
+            state.currentTextIndex = 0;
             saveToStorage();
             updateUnitNav();
             updateWordDisplay();
+            updateTextDisplay();
         });
     });
 
@@ -162,8 +166,11 @@ function setupEventListeners() {
             state.currentSemester = parseInt(this.dataset.semester);
             state.currentUnit = 0;
             state.currentWordIndex = 0;
+            state.currentTextIndex = 0;
+            saveToStorage();
             updateUnitNav();
             updateWordDisplay();
+            updateTextDisplay();
         });
     });
 
@@ -174,7 +181,10 @@ function setupEventListeners() {
             e.target.classList.add('active');
             state.currentUnit = parseInt(e.target.dataset.unit);
             state.currentWordIndex = 0;
+            state.currentTextIndex = 0;
+            saveToStorage();
             updateWordDisplay();
+            updateTextDisplay();
             updateUnitProgress();
         }
     });
