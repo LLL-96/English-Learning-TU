@@ -256,24 +256,13 @@ function updateVersionDisplay() {
     // 根据版本数据显示学期选择器
     const semesterSelector = document.getElementById('semester-selector');
     if (semesterSelector) {
-        // 人教版 PEP 有上下册，外研社版和通用大纲版暂时只有上册
-        if (state.currentVersion === 'pep') {
-            semesterSelector.style.display = 'flex';
-        } else {
-            // 外研社版和通用大纲版暂时隐藏下册按钮
-            semesterSelector.style.display = 'flex';
-            const semesterBtns = semesterSelector.querySelectorAll('.semester-btn');
-            semesterBtns.forEach(btn => {
-                if (btn.dataset.semester === '2') {
-                    btn.style.display = 'none';
-                }
-            });
-            // 确保上册被选中
-            state.currentSemester = 1;
-            semesterBtns.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.semester === '1');
-            });
-        }
+        // 所有版本都显示上下册选择器
+        semesterSelector.style.display = 'flex';
+        const semesterBtns = semesterSelector.querySelectorAll('.semester-btn');
+        semesterBtns.forEach(btn => {
+            btn.style.display = 'inline-block';
+            btn.classList.toggle('active', parseInt(btn.dataset.semester) === state.currentSemester);
+        });
     }
 }
 
