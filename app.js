@@ -280,6 +280,13 @@ function updateVersionDisplay() {
 function updateGradeButtons() {
     const versionData = getCurrentData();
     const startGrade = versionData ? (versionData.startGrade || 1) : 1;
+    
+    console.log('[DEBUG] updateGradeButtons:', {
+        currentVersion: state.currentVersion,
+        versionData: versionData ? 'exists' : 'null',
+        startGrade: startGrade
+    });
+    
     const buttons = document.querySelectorAll('.grade-btn');
 
     buttons.forEach(btn => {
@@ -1490,6 +1497,10 @@ function loadFromStorage() {
             } catch (e) {
                 console.error('解析数据失败:', e);
             }
+        } else {
+            // 没有保存数据时，根据版本设置正确的默认年级
+            const defaultGrade = state.currentVersion === 'pep' ? 3 : 1;
+            state.currentGrade = defaultGrade;
         }
     } catch (e) {
         console.error('加载数据失败:', e);

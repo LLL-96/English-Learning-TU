@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年级显示测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background: #d4edda; }
+        .fail { background: #f8d7da; }
+        .grade-btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border: 1px solid #667eea;
+            background: white;
+            cursor: pointer;
+        }
+        .grade-btn.hidden { display: none; }
+        .grade-btn.active { background: #667eea; color: white; }
+    </style>
+</head>
+<body>
+    <h1>年级显示测试页面</h1>
+    
+    <div class="test-result" id="test-results"></div>
+    
+    <h2>年级按钮测试区域</h2>
+    <div id="grade-buttons">
+        <button class="grade-btn" data-grade="1">一年级</button>
+        <button class="grade-btn" data-grade="2">二年级</button>
+        <button class="grade-btn" data-grade="3">三年级</button>
+        <button class="grade-btn" data-grade="4">四年级</button>
+        <button class="grade-btn" data-grade="5">五年级</button>
+        <button class="grade-btn" data-grade="6">六年级</button>
+    </div>
+    
+    <h2>版本切换测试</h2>
+    <select id="version-select">
+        <option value="pep">人教版 PEP</option>
+        <option value="waiyan">外研社版</option>
+        <option value="general">通用大纲版</option>
+    </select>
+
+    <!-- 数据文件 -->
+    <script src="versions/pep.js"></script>
+    <script src="versions/waiyan.js"></script>
+    <script src="versions/general.js"></script>
+    
+    <script>
+        const resultsDiv = document.getElementById('test-results');
+        
+        function log(message, isPass = true) {
+            const div = document.createElement('div');
+            div.className = isPass ? 'pass' : 'fail';
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        // 测试1: 检查数据是否加载
+        log('测试1: 检查数据文件是否加载');
+        log(`pepData: ${typeof pepData !== 'undefined' ? '已加载 ✓' : '未加载 ✗'}`, typeof pepData !== 'undefined');
+        log(`waiyanData: ${typeof waiyanData !== 'undefined' ? '已加载 ✓' : '未加载 ✗'}`, typeof waiyanData !== 'undefined');
+        log(`generalData: ${typeof generalData !== 'undefined' ? '已加载 ✓' : '未加载 ✗'}`, typeof generalData !== 'undefined');
+        
+        // 测试2: 检查 startGrade
+        log('\n测试2: 检查 startGrade 字段');
+        if (typeof pepData !== 'undefined') {
+            log(`pepData.startGrade: ${pepData.startGrade} (期望: 3)`, pepData.startGrade === 3);
+        }
+        if (typeof waiyanData !== 'undefined') {
+            log(`waiyanData.startGrade: ${waiyanData.startGrade} (期望: 1)`, waiyanData.startGrade === 1);
+        }
+        if (typeof generalData !== 'undefined') {
+            log(`generalData.startGrade: ${generalData.startGrade} (期望: 1)`, generalData.startGrade === 1);
+        }
+        
+        // 测试3: 检查 grades 字段
+        log('\n测试3: 检查 grades 字段');
+        if (typeof waiyanData !== 'undefined') {
+            const grades = Object.keys(waiyanData.grades);
+            log(`waiyanData.grades 键: ${grades.join(', ')}`);
+            log(`包含1年级: ${grades.includes('1') || grades.includes(1) ? '✓' : '✗'}`, grades.includes('1') || grades.includes(1));
+            log(`包含2年级: ${grades.includes('2') || grades.includes(2) ? '✓' : '✗'}`, grades.includes('2') || grades.includes(2));
+        }
+        
+        // 测试4: 模拟 updateGradeButtons 函数
+        log('\n测试4: 模拟 updateGradeButtons 逻辑');
+        
+        let currentVersion = 'waiyan';
+        
+        function getCurrentData() {
+            switch (currentVersion) {
+                case 'pep': return typeof pepData !== 'undefined' ? pepData : null;
+                case 'waiyan': return typeof waiyanData !== 'undefined' ? waiyanData : null;
+                case 'general': return typeof generalData !== 'undefined' ? generalData : null;
+                default: return null;
+            }
+        }
+        
+        function updateGradeButtons() {
+            const versionData = getCurrentData();
+            const startGrade = versionData ? (versionData.startGrade || 1) : 1;
+            const buttons = document.querySelectorAll('.grade-btn');
+            
+            log(`当前版本: ${currentVersion}`);
+            log(`versionData: ${versionData ? '有数据' : '无数据'}`);
+            log(`startGrade: ${startGrade}`);
+            
+            buttons.forEach(btn => {
+                const grade = parseInt(btn.dataset.grade);
+                if (grade >= startGrade) {
+                    btn.style.display = 'inline-block';
+                    btn.classList.remove('hidden');
+                } else {
+                    btn.style.display = 'none';
+                    btn.classList.add('hidden');
+                }
+            });
+        }
+        
+        // 初始更新
+        updateGradeButtons();
+        
+        // 版本切换事件
+        document.getElementById('version-select').addEventListener('change', function() {
+            currentVersion = this.value;
+            updateGradeButtons();
+        });
+        
+        log('\n测试完成！请切换版本查看年级按钮变化。');
+    </script>
+</body>
+</html>
