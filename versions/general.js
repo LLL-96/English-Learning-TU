@@ -1304,4 +1304,3 @@ const generalData = {
     }
   }
 };
-            { word: "kitchen", phonetic: "/ˈkɪtʃɪn/",
