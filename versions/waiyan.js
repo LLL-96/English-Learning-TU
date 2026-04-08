@@ -784,6 +784,450 @@ const waiyanData = {
           ]
         }
       ]
+    },
+    // ==================== 一年级下册 ====================
+    "1-2": {
+      semester: "下册",
+      units: [
+        {
+          unitId: "M1",
+          unitName: "Module 1 Colours",
+          words: [
+            { word: "red", phonetic: "/red/", meaning: "红色", example: "It's red.", exampleCn: "它是红色的。", tags: ["颜色", "四会词"] },
+            { word: "yellow", phonetic: "/ˈjeləʊ/", meaning: "黄色", example: "It's yellow.", exampleCn: "它是黄色的。", tags: ["颜色", "四会词"] },
+            { word: "blue", phonetic: "/bluː/", meaning: "蓝色", example: "It's blue.", exampleCn: "它是蓝色的。", tags: ["颜色", "四会词"] },
+            { word: "green", phonetic: "/ɡriːn/", meaning: "绿色", example: "It's green.", exampleCn: "它是绿色的。", tags: ["颜色", "四会词"] },
+            { word: "black", phonetic: "/blæk/", meaning: "黑色", example: "It's black.", exampleCn: "它是黑色的。", tags: ["颜色", "四会词"] },
+            { word: "white", phonetic: "/waɪt/", meaning: "白色", example: "It's white.", exampleCn: "它是白色的。", tags: ["颜色", "四会词"] },
+            { word: "orange", phonetic: "/ˈɒrɪndʒ/", meaning: "橙色", example: "It's orange.", exampleCn: "它是橙色的。", tags: ["颜色", "三会词"] },
+            { word: "colour", phonetic: "/ˈkʌlər/", meaning: "颜色", example: "What colour?", exampleCn: "什么颜色？", tags: ["颜色", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 1 Unit 1", title: "Colours", content: [{ en: "What colour is it?", cn: "它是什么颜色？" }, { en: "It's red.", cn: "它是红色的。" }] }
+          ]
+        },
+        {
+          unitId: "M2",
+          unitName: "Module 2 Animals",
+          words: [
+            { word: "panda", phonetic: "/ˈpændə/", meaning: "熊猫", example: "It's a panda.", exampleCn: "它是一只熊猫。", tags: ["动物", "四会词"] },
+            { word: "monkey", phonetic: "/ˈmʌŋki/", meaning: "猴子", example: "It's a monkey.", exampleCn: "它是一只猴子。", tags: ["动物", "四会词"] },
+            { word: "elephant", phonetic: "/ˈelɪfənt/", meaning: "大象", example: "It's an elephant.", exampleCn: "它是一头大象。", tags: ["动物", "四会词"] },
+            { word: "tiger", phonetic: "/ˈtaɪɡər/", meaning: "老虎", example: "It's a tiger.", exampleCn: "它是一只老虎。", tags: ["动物", "四会词"] },
+            { word: "lion", phonetic: "/ˈlaɪən/", meaning: "狮子", example: "It's a lion.", exampleCn: "它是一只狮子。", tags: ["动物", "四会词"] },
+            { word: "zoo", phonetic: "/zuː/", meaning: "动物园", example: "Let's go to the zoo.", exampleCn: "我们去动物园吧。", tags: ["地点", "四会词"] },
+            { word: "bear", phonetic: "/beər/", meaning: "熊", example: "It's a bear.", exampleCn: "它是一只熊。", tags: ["动物", "三会词"] },
+            { word: "giraffe", phonetic: "/dʒəˈrɑːf/", meaning: "长颈鹿", example: "It's a giraffe.", exampleCn: "它是一只长颈鹿。", tags: ["动物", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 2 Unit 1", title: "Animals", content: [{ en: "What's this?", cn: "这是什么？" }, { en: "It's a panda.", cn: "它是一只熊猫。" }] }
+          ]
+        },
+        {
+          unitId: "M3",
+          unitName: "Module 3 Food",
+          words: [
+            { word: "rice", phonetic: "/raɪs/", meaning: "米饭", example: "I like rice.", exampleCn: "我喜欢米饭。", tags: ["食物", "四会词"] },
+            { word: "noodles", phonetic: "/ˈnuːdlz/", meaning: "面条", example: "I like noodles.", exampleCn: "我喜欢面条。", tags: ["食物", "四会词"] },
+            { word: "meat", phonetic: "/miːt/", meaning: "肉", example: "I like meat.", exampleCn: "我喜欢肉。", tags: ["食物", "四会词"] },
+            { word: "fish", phonetic: "/fɪʃ/", meaning: "鱼", example: "I like fish.", exampleCn: "我喜欢鱼。", tags: ["食物", "四会词"] },
+            { word: "milk", phonetic: "/mɪlk/", meaning: "牛奶", example: "I like milk.", exampleCn: "我喜欢牛奶。", tags: ["食物", "四会词"] },
+            { word: "like", phonetic: "/laɪk/", meaning: "喜欢", example: "I like apples.", exampleCn: "我喜欢苹果。", tags: ["动词", "四会词"] },
+            { word: "pass", phonetic: "/pɑːs/", meaning: "传递", example: "Pass me the rice.", exampleCn: "把米饭递给我。", tags: ["动词", "三会词"] },
+            { word: "but", phonetic: "/bʌt/", meaning: "但是", example: "I like noodles, but...", exampleCn: "我喜欢面条，但是...", tags: ["连词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 3 Unit 1", title: "Food", content: [{ en: "Do you like meat?", cn: "你喜欢肉吗？" }, { en: "Yes, I do.", cn: "是的，我喜欢。" }] }
+          ]
+        },
+        {
+          unitId: "M4",
+          unitName: "Module 4 Family",
+          words: [
+            { word: "mother", phonetic: "/ˈmʌðər/", meaning: "母亲", example: "This is my mother.", exampleCn: "这是我的妈妈。", tags: ["家庭", "四会词"] },
+            { word: "father", phonetic: "/ˈfɑːðər/", meaning: "父亲", example: "This is my father.", exampleCn: "这是我的爸爸。", tags: ["家庭", "四会词"] },
+            { word: "sister", phonetic: "/ˈsɪstər/", meaning: "姐妹", example: "This is my sister.", exampleCn: "这是我的姐妹。", tags: ["家庭", "四会词"] },
+            { word: "brother", phonetic: "/ˈbrʌðər/", meaning: "兄弟", example: "This is my brother.", exampleCn: "这是我的兄弟。", tags: ["家庭", "四会词"] },
+            { word: "grandma", phonetic: "/ˈɡrænmɑː/", meaning: "奶奶", example: "This is my grandma.", exampleCn: "这是我的奶奶。", tags: ["家庭", "四会词"] },
+            { word: "grandpa", phonetic: "/ˈɡrænpɑː/", meaning: "爷爷", example: "This is my grandpa.", exampleCn: "这是我的爷爷。", tags: ["家庭", "四会词"] },
+            { word: "she's", phonetic: "/ʃiːz/", meaning: "她是", example: "She's my mother.", exampleCn: "她是我的妈妈。", tags: ["缩写", "三会词"] },
+            { word: "he's", phonetic: "/hiːz/", meaning: "他是", example: "He's my father.", exampleCn: "他是我的爸爸。", tags: ["缩写", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 4 Unit 1", title: "Family", content: [{ en: "Is this your mother?", cn: "这是你的妈妈吗？" }, { en: "Yes, it is.", cn: "是的。" }] }
+          ]
+        }
+      ]
+    },
+    // ==================== 二年级下册 ====================
+    "2-2": {
+      semester: "下册",
+      units: [
+        {
+          unitId: "M1",
+          unitName: "Module 1 Weather",
+          words: [
+            { word: "weather", phonetic: "/ˈweðər/", meaning: "天气", example: "What's the weather like?", exampleCn: "天气怎么样？", tags: ["天气", "四会词"] },
+            { word: "sunny", phonetic: "/ˈsʌni/", meaning: "晴朗的", example: "It's sunny today.", exampleCn: "今天天气晴朗。", tags: ["天气", "四会词"] },
+            { word: "windy", phonetic: "/ˈwɪndi/", meaning: "有风的", example: "It's windy today.", exampleCn: "今天有风。", tags: ["天气", "四会词"] },
+            { word: "rainy", phonetic: "/ˈreɪni/", meaning: "下雨的", example: "It's rainy today.", exampleCn: "今天下雨。", tags: ["天气", "四会词"] },
+            { word: "cloudy", phonetic: "/ˈklaʊdi/", meaning: "多云的", example: "It's cloudy today.", exampleCn: "今天多云。", tags: ["天气", "四会词"] },
+            { word: "snowy", phonetic: "/ˈsnəʊi/", meaning: "下雪的", example: "It's snowy today.", exampleCn: "今天下雪。", tags: ["天气", "四会词"] },
+            { word: "hot", phonetic: "/hɒt/", meaning: "热的", example: "It's hot today.", exampleCn: "今天很热。", tags: ["天气", "三会词"] },
+            { word: "cold", phonetic: "/kəʊld/", meaning: "冷的", example: "It's cold today.", exampleCn: "今天很冷。", tags: ["天气", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 1 Unit 1", title: "Weather", content: [{ en: "What's the weather like?", cn: "天气怎么样？" }, { en: "It's sunny.", cn: "天气晴朗。" }] }
+          ]
+        },
+        {
+          unitId: "M2",
+          unitName: "Module 2 Activities",
+          words: [
+            { word: "read", phonetic: "/riːd/", meaning: "阅读", example: "I like reading.", exampleCn: "我喜欢阅读。", tags: ["活动", "四会词"] },
+            { word: "run", phonetic: "/rʌn/", meaning: "跑步", example: "I like running.", exampleCn: "我喜欢跑步。", tags: ["活动", "四会词"] },
+            { word: "swim", phonetic: "/swɪm/", meaning: "游泳", example: "I like swimming.", exampleCn: "我喜欢游泳。", tags: ["活动", "四会词"] },
+            { word: "sing", phonetic: "/sɪŋ/", meaning: "唱歌", example: "I like singing.", exampleCn: "我喜欢唱歌。", tags: ["活动", "四会词"] },
+            { word: "dance", phonetic: "/dɑːns/", meaning: "跳舞", example: "I like dancing.", exampleCn: "我喜欢跳舞。", tags: ["活动", "四会词"] },
+            { word: "draw", phonetic: "/drɔː/", meaning: "画画", example: "I like drawing.", exampleCn: "我喜欢画画。", tags: ["活动", "四会词"] },
+            { word: "these", phonetic: "/ðiːz/", meaning: "这些", example: "What are these?", exampleCn: "这些是什么？", tags: ["代词", "三会词"] },
+            { word: "those", phonetic: "/ðəʊz/", meaning: "那些", example: "What are those?", exampleCn: "那些是什么？", tags: ["代词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 2 Unit 1", title: "Activities", content: [{ en: "Do you like reading?", cn: "你喜欢阅读吗？" }, { en: "Yes, I do.", cn: "是的，我喜欢。" }] }
+          ]
+        },
+        {
+          unitId: "M3",
+          unitName: "Module 3 Clothes",
+          words: [
+            { word: "shirt", phonetic: "/ʃɜːrt/", meaning: "衬衫", example: "I have a shirt.", exampleCn: "我有一件衬衫。", tags: ["服装", "四会词"] },
+            { word: "skirt", phonetic: "/skɜːrt/", meaning: "裙子", example: "I have a skirt.", exampleCn: "我有一条裙子。", tags: ["服装", "四会词"] },
+            { word: "trousers", phonetic: "/ˈtraʊzərz/", meaning: "裤子", example: "I have trousers.", exampleCn: "我有一条裤子。", tags: ["服装", "四会词"] },
+            { word: "shoes", phonetic: "/ʃuːz/", meaning: "鞋子", example: "I have shoes.", exampleCn: "我有一双鞋。", tags: ["服装", "四会词"] },
+            { word: "socks", phonetic: "/sɒks/", meaning: "袜子", example: "I have socks.", exampleCn: "我有袜子。", tags: ["服装", "四会词"] },
+            { word: "dress", phonetic: "/dres/", meaning: "连衣裙", example: "I have a dress.", exampleCn: "我有一条连衣裙。", tags: ["服装", "四会词"] },
+            { word: "coat", phonetic: "/kəʊt/", meaning: "外套", example: "I have a coat.", exampleCn: "我有一件外套。", tags: ["服装", "三会词"] },
+            { word: "hat", phonetic: "/hæt/", meaning: "帽子", example: "I have a hat.", exampleCn: "我有一顶帽子。", tags: ["服装", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 3 Unit 1", title: "Clothes", content: [{ en: "Have you got a shirt?", cn: "你有衬衫吗？" }, { en: "Yes, I have.", cn: "是的，我有。" }] }
+          ]
+        },
+        {
+          unitId: "M4",
+          unitName: "Module 4 Seasons",
+          words: [
+            { word: "spring", phonetic: "/sprɪŋ/", meaning: "春天", example: "It's spring.", exampleCn: "现在是春天。", tags: ["季节", "四会词"] },
+            { word: "summer", phonetic: "/ˈsʌmər/", meaning: "夏天", example: "It's summer.", exampleCn: "现在是夏天。", tags: ["季节", "四会词"] },
+            { word: "autumn", phonetic: "/ˈɔːtəm/", meaning: "秋天", example: "It's autumn.", exampleCn: "现在是秋天。", tags: ["季节", "四会词"] },
+            { word: "winter", phonetic: "/ˈwɪntər/", meaning: "冬天", example: "It's winter.", exampleCn: "现在是冬天。", tags: ["季节", "四会词"] },
+            { word: "warm", phonetic: "/wɔːrm/", meaning: "温暖的", example: "It's warm in spring.", exampleCn: "春天很温暖。", tags: ["天气", "四会词"] },
+            { word: "cool", phonetic: "/kuːl/", meaning: "凉爽的", example: "It's cool in autumn.", exampleCn: "秋天很凉爽。", tags: ["天气", "四会词"] },
+            { word: "fly", phonetic: "/flaɪ/", meaning: "放（风筝）", example: "I fly a kite.", exampleCn: "我放风筝。", tags: ["活动", "三会词"] },
+            { word: "kite", phonetic: "/kaɪt/", meaning: "风筝", example: "I fly a kite.", exampleCn: "我放风筝。", tags: ["玩具", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 4 Unit 1", title: "Seasons", content: [{ en: "What's your favourite season?", cn: "你最喜欢的季节是什么？" }, { en: "My favourite season is spring.", cn: "我最喜欢的季节是春天。" }] }
+          ]
+        }
+      ]
+    },
+    // ==================== 三年级下册 ====================
+    "3-2": {
+      semester: "下册",
+      units: [
+        {
+          unitId: "M1",
+          unitName: "Module 1 Alphabet",
+          words: [
+            { word: "favourite", phonetic: "/ˈfeɪvərɪt/", meaning: "最喜欢的", example: "My favourite colour is blue.", exampleCn: "我最喜欢的颜色是蓝色。", tags: ["形容词", "四会词"] },
+            { word: "song", phonetic: "/sɒŋ/", meaning: "歌曲", example: "My favourite song.", exampleCn: "我最喜欢的歌曲。", tags: ["娱乐", "四会词"] },
+            { word: "TV", phonetic: "/ˌtiː ˈviː/", meaning: "电视", example: "I watch TV.", exampleCn: "我看电视。", tags: ["电器", "四会词"] },
+            { word: "toy", phonetic: "/tɔɪ/", meaning: "玩具", example: "My favourite toy.", exampleCn: "我最喜欢的玩具。", tags: ["玩具", "四会词"] },
+            { word: "computer", phonetic: "/kəmˈpjuːtər/", meaning: "电脑", example: "I play computer games.", exampleCn: "我玩电脑游戏。", tags: ["电器", "四会词"] },
+            { word: "game", phonetic: "/ɡeɪm/", meaning: "游戏", example: "I like this game.", exampleCn: "我喜欢这个游戏。", tags: ["娱乐", "四会词"] },
+            { word: "car", phonetic: "/kɑːr/", meaning: "小汽车", example: "I have a toy car.", exampleCn: "我有一辆玩具车。", tags: ["玩具", "三会词"] },
+            { word: "ship", phonetic: "/ʃɪp/", meaning: "轮船", example: "I have a toy ship.", exampleCn: "我有一艘玩具船。", tags: ["玩具", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 1 Unit 1", title: "Favourite Things", content: [{ en: "What's your favourite song?", cn: "你最喜欢的歌曲是什么？" }, { en: "My favourite song is ABC.", cn: "我最喜欢的歌曲是ABC。" }] }
+          ]
+        },
+        {
+          unitId: "M2",
+          unitName: "Module 2 Positions",
+          words: [
+            { word: "on", phonetic: "/ɒn/", meaning: "在...上面", example: "The book is on the desk.", exampleCn: "书在桌子上。", tags: ["介词", "四会词"] },
+            { word: "under", phonetic: "/ˈʌndər/", meaning: "在...下面", example: "The ball is under the chair.", exampleCn: "球在椅子下面。", tags: ["介词", "四会词"] },
+            { word: "in", phonetic: "/ɪn/", meaning: "在...里面", example: "The pen is in the box.", exampleCn: "笔在盒子里。", tags: ["介词", "四会词"] },
+            { word: "behind", phonetic: "/bɪˈhaɪnd/", meaning: "在...后面", example: "The cat is behind the door.", exampleCn: "猫在门后面。", tags: ["介词", "四会词"] },
+            { word: "box", phonetic: "/bɒks/", meaning: "盒子", example: "It's in the box.", exampleCn: "它在盒子里。", tags: ["物品", "四会词"] },
+            { word: "bedroom", phonetic: "/ˈbedruːm/", meaning: "卧室", example: "This is my bedroom.", exampleCn: "这是我的卧室。", tags: ["地点", "四会词"] },
+            { word: "living room", phonetic: "/ˈlɪvɪŋ ruːm/", meaning: "客厅", example: "This is the living room.", exampleCn: "这是客厅。", tags: ["地点", "三会词"] },
+            { word: "kitchen", phonetic: "/ˈkɪtʃɪn/", meaning: "厨房", example: "This is the kitchen.", exampleCn: "这是厨房。", tags: ["地点", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 2 Unit 1", title: "Positions", content: [{ en: "Where's the bird?", cn: "鸟在哪里？" }, { en: "It's in the box.", cn: "它在盒子里。" }] }
+          ]
+        },
+        {
+          unitId: "M3",
+          unitName: "Module 3 Travel",
+          words: [
+            { word: "by", phonetic: "/baɪ/", meaning: "乘（交通工具）", example: "I go to school by bus.", exampleCn: "我乘公交车上学。", tags: ["介词", "四会词"] },
+            { word: "bus", phonetic: "/bʌs/", meaning: "公共汽车", example: "I go by bus.", exampleCn: "我乘公交车。", tags: ["交通", "四会词"] },
+            { word: "car", phonetic: "/kɑːr/", meaning: "小汽车", example: "I go by car.", exampleCn: "我乘小汽车。", tags: ["交通", "四会词"] },
+            { word: "bike", phonetic: "/baɪk/", meaning: "自行车", example: "I go by bike.", exampleCn: "我骑自行车。", tags: ["交通", "四会词"] },
+            { word: "walk", phonetic: "/wɔːk/", meaning: "步行", example: "I walk to school.", exampleCn: "我步行上学。", tags: ["动词", "四会词"] },
+            { word: "goes", phonetic: "/ɡəʊz/", meaning: "去（第三人称）", example: "She goes to school.", exampleCn: "她去上学。", tags: ["动词", "四会词"] },
+            { word: "work", phonetic: "/wɜːrk/", meaning: "工作", example: "He goes to work.", exampleCn: "他去上班。", tags: ["动词", "三会词"] },
+            { word: "go to work", phonetic: "/ɡəʊ tuː wɜːrk/", meaning: "去上班", example: "My father goes to work.", exampleCn: "我爸爸去上班。", tags: ["短语", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 3 Unit 1", title: "Travel", content: [{ en: "How do you go to school?", cn: "你怎么去上学？" }, { en: "I go to school by bus.", cn: "我乘公交车上学。" }] }
+          ]
+        },
+        {
+          unitId: "M4",
+          unitName: "Module 4 Holidays",
+          words: [
+            { word: "holiday", phonetic: "/ˈhɒlədeɪ/", meaning: "假期", example: "We have a holiday.", exampleCn: "我们有一个假期。", tags: ["时间", "四会词"] },
+            { word: "weekend", phonetic: "/ˌwiːkˈend/", meaning: "周末", example: "At the weekend.", exampleCn: "在周末。", tags: ["时间", "四会词"] },
+            { word: "place", phonetic: "/pleɪs/", meaning: "地方", example: "What place?", exampleCn: "什么地方？", tags: ["地点", "四会词"] },
+            { word: "British", phonetic: "/ˈbrɪtɪʃ/", meaning: "英国的", example: "British Museum", exampleCn: "大英博物馆", tags: ["国家", "四会词"] },
+            { word: "museum", phonetic: "/mjuˈziːəm/", meaning: "博物馆", example: "the British Museum", exampleCn: "大英博物馆", tags: ["地点", "四会词"] },
+            { word: "the Great Wall", phonetic: "/ðə ɡreɪt wɔːl/", meaning: "长城", example: "I visited the Great Wall.", exampleCn: "我参观了长城。", tags: ["地点", "四会词"] },
+            { word: "visit", phonetic: "/ˈvɪzɪt/", meaning: "参观", example: "I visited Beijing.", exampleCn: "我参观了北京。", tags: ["动词", "三会词"] },
+            { word: "went", phonetic: "/went/", meaning: "去（过去式）", example: "I went to Beijing.", exampleCn: "我去了北京。", tags: ["动词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 4 Unit 1", title: "Holidays", content: [{ en: "Where did you go?", cn: "你去了哪里？" }, { en: "I went to the Great Wall.", cn: "我去了长城。" }] }
+          ]
+        }
+      ]
+    },
+    // ==================== 四年级下册 ====================
+    "4-2": {
+      semester: "下册",
+      units: [
+        {
+          unitId: "M1",
+          unitName: "Module 1 Future",
+          words: [
+            { word: "robot", phonetic: "/ˈrəʊbɒt/", meaning: "机器人", example: "Robots will do everything.", exampleCn: "机器人将会做所有事情。", tags: ["科技", "四会词"] },
+            { word: "everything", phonetic: "/ˈevriθɪŋ/", meaning: "所有事情", example: "Everything is ready.", exampleCn: "所有事情都准备好了。", tags: ["代词", "四会词"] },
+            { word: "housework", phonetic: "/ˈhaʊswɜːrk/", meaning: "家务", example: "Do the housework.", exampleCn: "做家务。", tags: ["家务", "四会词"] },
+            { word: "learn", phonetic: "/lɜːrn/", meaning: "学习", example: "Robots will learn.", exampleCn: "机器人将会学习。", tags: ["动词", "四会词"] },
+            { word: "our", phonetic: "/ˈaʊər/", meaning: "我们的", example: "This is our house.", exampleCn: "这是我们的房子。", tags: ["代词", "四会词"] },
+            { word: "will", phonetic: "/wɪl/", meaning: "将要", example: "I will go.", exampleCn: "我将要走。", tags: ["助动词", "四会词"] },
+            { word: "won't", phonetic: "/wəʊnt/", meaning: "将不会", example: "I won't go.", exampleCn: "我将不会走。", tags: ["缩写", "三会词"] },
+            { word: "homework", phonetic: "/ˈhəʊmwɜːrk/", meaning: "家庭作业", example: "Do your homework.", exampleCn: "做你的家庭作业。", tags: ["学习", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 1 Unit 1", title: "Future", content: [{ en: "Will robots do the housework?", cn: "机器人会做家务吗？" }, { en: "Yes, they will.", cn: "是的，它们会。" }] }
+          ]
+        },
+        {
+          unitId: "M2",
+          unitName: "Module 2 Plans",
+          words: [
+            { word: "Monday", phonetic: "/ˈmʌndeɪ/", meaning: "星期一", example: "On Monday.", exampleCn: "在星期一。", tags: ["时间", "四会词"] },
+            { word: "Tuesday", phonetic: "/ˈtjuːzdeɪ/", meaning: "星期二", example: "On Tuesday.", exampleCn: "在星期二。", tags: ["时间", "四会词"] },
+            { word: "Wednesday", phonetic: "/ˈwenzdeɪ/", meaning: "星期三", example: "On Wednesday.", exampleCn: "在星期三。", tags: ["时间", "四会词"] },
+            { word: "Thursday", phonetic: "/ˈθɜːrzdeɪ/", meaning: "星期四", example: "On Thursday.", exampleCn: "在星期四。", tags: ["时间", "四会词"] },
+            { word: "Friday", phonetic: "/ˈfraɪdeɪ/", meaning: "星期五", example: "On Friday.", exampleCn: "在星期五。", tags: ["时间", "四会词"] },
+            { word: "Saturday", phonetic: "/ˈsætərdeɪ/", meaning: "星期六", example: "On Saturday.", exampleCn: "在星期六。", tags: ["时间", "四会词"] },
+            { word: "Sunday", phonetic: "/ˈsʌndeɪ/", meaning: "星期日", example: "On Sunday.", exampleCn: "在星期日。", tags: ["时间", "四会词"] },
+            { word: "have", phonetic: "/hæv/", meaning: "有", example: "I have a picnic.", exampleCn: "我野餐。", tags: ["动词", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Module 2 Unit 1", title: "Plans", content: [{ en: "Will you take your kite?", cn: "你会带你的风筝吗？" }, { en: "Yes, I will.", cn: "是的，我会。" }] }
+          ]
+        },
+        {
+          unitId: "M3",
+          unitName: "Module 3 Countries",
+          words: [
+            { word: "country", phonetic: "/ˈkʌntri/", meaning: "国家", example: "Which country?", exampleCn: "哪个国家？", tags: ["国家", "四会词"] },
+            { word: "Australia", phonetic: "/ɒˈstreɪliə/", meaning: "澳大利亚", example: "I live in Australia.", exampleCn: "我住在澳大利亚。", tags: ["国家", "四会词"] },
+            { word: "Australian", phonetic: "/ɒˈstreɪliən/", meaning: "澳大利亚的", example: "I'm Australian.", exampleCn: "我是澳大利亚人。", tags: ["国家", "四会词"] },
+            { word: "language", phonetic: "/ˈlæŋɡwɪdʒ/", meaning: "语言", example: "What language?", exampleCn: "什么语言？", tags: ["语言", "四会词"] },
+            { word: "kangaroo", phonetic: "/ˌkæŋɡəˈruː/", meaning: "袋鼠", example: "I like kangaroos.", exampleCn: "我喜欢袋鼠。", tags: ["动物", "四会词"] },
+            { word: "back", phonetic: "/bæk/", meaning: "后面的", example: "Kangaroos have strong back legs.", exampleCn: "袋鼠有强壮的后腿。", tags: ["形容词", "四会词"] },
+            { word: "English", phonetic: "/ˈɪŋɡlɪʃ/", meaning: "英语", example: "I speak English.", exampleCn: "我说英语。", tags: ["语言", "三会词"] },
+            { word: "speak", phonetic: "/spiːk/", meaning: "说", example: "I speak English.", exampleCn: "我说英语。", tags: ["动词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 3 Unit 1", title: "Countries", content: [{ en: "Where do you live?", cn: "你住在哪里？" }, { en: "I live in Australia.", cn: "我住在澳大利亚。" }] }
+          ]
+        },
+        {
+          unitId: "M4",
+          unitName: "Module 4 Library",
+          words: [
+            { word: "library", phonetic: "/ˈlaɪbreri/", meaning: "图书馆", example: "I go to the library.", exampleCn: "我去图书馆。", tags: ["地点", "四会词"] },
+            { word: "find", phonetic: "/faɪnd/", meaning: "找到", example: "I can't find it.", exampleCn: "我找不到它。", tags: ["动词", "四会词"] },
+            { word: "CD", phonetic: "/ˌsiː ˈdiː/", meaning: "激光唱片", example: "I want a CD.", exampleCn: "我想要一张CD。", tags: ["物品", "四会词"] },
+            { word: "bring", phonetic: "/brɪŋ/", meaning: "带来", example: "Bring back the book.", exampleCn: "把书带回来。", tags: ["动词", "四会词"] },
+            { word: "use", phonetic: "/juːz/", meaning: "使用", example: "Can I use it?", exampleCn: "我能用它吗？", tags: ["动词", "四会词"] },
+            { word: "card", phonetic: "/kɑːrd/", meaning: "卡片", example: "Here's my library card.", exampleCn: "这是我的借书卡。", tags: ["物品", "四会词"] },
+            { word: "heavy", phonetic: "/ˈhevi/", meaning: "重的", example: "The bag is heavy.", exampleCn: "这个包很重。", tags: ["形容词", "三会词"] },
+            { word: "dictionary", phonetic: "/ˈdɪkʃəneri/", meaning: "词典", example: "I need a dictionary.", exampleCn: "我需要一本词典。", tags: ["学习", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 4 Unit 1", title: "Library", content: [{ en: "Where are the books?", cn: "书在哪里？" }, { en: "They are on Shelf C.", cn: "它们在C书架上。" }] }
+          ]
+        }
+      ]
+    },
+    // ==================== 五年级下册 ====================
+    "5-2": {
+      semester: "下册",
+      units: [
+        {
+          unitId: "M1",
+          unitName: "Module 1 Changing",
+          words: [
+            { word: "still", phonetic: "/stɪl/", meaning: "仍然", example: "She is still young.", exampleCn: "她仍然年轻。", tags: ["副词", "四会词"] },
+            { word: "programme", phonetic: "/ˈprəʊɡræm/", meaning: "节目", example: "I watched a TV programme.", exampleCn: "我看了一个电视节目。", tags: ["娱乐", "四会词"] },
+            { word: "lady", phonetic: "/ˈleɪdi/", meaning: "女士", example: "She is a nice lady.", exampleCn: "她是一位善良的女士。", tags: ["人物", "四会词"] },
+            { word: "life", phonetic: "/laɪf/", meaning: "生活", example: "Life was different.", exampleCn: "生活是不同的。", tags: ["名词", "四会词"] },
+            { word: "different", phonetic: "/ˈdɪfrənt/", meaning: "不同的", example: "Life was different.", exampleCn: "生活是不同的。", tags: ["形容词", "四会词"] },
+            { word: "ago", phonetic: "/əˈɡəʊ/", meaning: "以前", example: "Five years ago.", exampleCn: "五年前。", tags: ["时间", "四会词"] },
+            { word: "interviewer", phonetic: "/ˈɪntərvjuːər/", meaning: "采访者", example: "The interviewer asked.", exampleCn: "采访者问道。", tags: ["人物", "三会词"] },
+            { word: "enough", phonetic: "/ɪˈnʌf/", meaning: "足够的", example: "I have enough money.", exampleCn: "我有足够的钱。", tags: ["形容词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 1 Unit 1", title: "Changing", content: [{ en: "Life was very different many years ago.", cn: "许多年前的生活非常不同。" }, { en: "But it's changing now.", cn: "但现在正在改变。" }] }
+          ]
+        },
+        {
+          unitId: "M2",
+          unitName: "Module 2 Grandparents",
+          words: [
+            { word: "learnt", phonetic: "/lɜːnt/", meaning: "学习（过去式）", example: "I learnt English.", exampleCn: "我学了英语。", tags: ["动词", "四会词"] },
+            { word: "taught", phonetic: "/tɔːt/", meaning: "教（过去式）", example: "My mother taught me.", exampleCn: "我妈妈教我。", tags: ["动词", "四会词"] },
+            { word: "language", phonetic: "/ˈlæŋɡwɪdʒ/", meaning: "语言", example: "I learnt a language.", exampleCn: "我学了一门语言。", tags: ["学习", "四会词"] },
+            { word: "wrote", phonetic: "/rəʊt/", meaning: "写（过去式）", example: "I wrote a letter.", exampleCn: "我写了一封信。", tags: ["动词", "四会词"] },
+            { word: "dancer", phonetic: "/ˈdɑːnsər/", meaning: "舞蹈演员", example: "She is a dancer.", exampleCn: "她是一名舞蹈演员。", tags: ["职业", "四会词"] },
+            { word: "foreign", phonetic: "/ˈfɒrən/", meaning: "外国的", example: "I learnt a foreign language.", exampleCn: "我学了一门外语。", tags: ["形容词", "四会词"] },
+            { word: "hard", phonetic: "/hɑːrd/", meaning: "努力地", example: "I worked hard.", exampleCn: "我努力工作。", tags: ["副词", "三会词"] },
+            { word: "study", phonetic: "/ˈstʌdi/", meaning: "学习", example: "I study English.", exampleCn: "我学习英语。", tags: ["动词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 2 Unit 1", title: "Grandparents", content: [{ en: "Did your grandma learn English?", cn: "你奶奶学过英语吗？" }, { en: "Yes, she did.", cn: "是的，她学过。" }] }
+          ]
+        },
+        {
+          unitId: "M3",
+          unitName: "Module 3 English Food",
+          words: [
+            { word: "English", phonetic: "/ˈɪŋɡlɪʃ/", meaning: "英国的", example: "English food.", exampleCn: "英国食物。", tags: ["国家", "四会词"] },
+            { word: "breakfast", phonetic: "/ˈbrekfəst/", meaning: "早餐", example: "I had eggs for breakfast.", exampleCn: "我早餐吃了鸡蛋。", tags: ["餐食", "四会词"] },
+            { word: "lunch", phonetic: "/lʌntʃ/", meaning: "午餐", example: "I had fish for lunch.", exampleCn: "我午餐吃了鱼。", tags: ["餐食", "四会词"] },
+            { word: "dinner", phonetic: "/ˈdɪnər/", meaning: "晚餐", example: "I had meat for dinner.", exampleCn: "我晚餐吃了肉。", tags: ["餐食", "四会词"] },
+            { word: "had", phonetic: "/hæd/", meaning: "吃（过去式）", example: "I had eggs.", exampleCn: "我吃了鸡蛋。", tags: ["动词", "四会词"] },
+            { word: "egg", phonetic: "/eɡ/", meaning: "鸡蛋", example: "I had eggs.", exampleCn: "我吃了鸡蛋。", tags: ["食物", "四会词"] },
+            { word: "sandwich", phonetic: "/ˈsænwɪtʃ/", meaning: "三明治", example: "I had a sandwich.", exampleCn: "我吃了一个三明治。", tags: ["食物", "三会词"] },
+            { word: "fish and chips", phonetic: "/fɪʃ ənd tʃɪps/", meaning: "炸鱼薯条", example: "I had fish and chips.", exampleCn: "我吃了炸鱼薯条。", tags: ["食物", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 3 Unit 1", title: "English Food", content: [{ en: "What did she have for breakfast?", cn: "她早餐吃了什么？" }, { en: "She had eggs.", cn: "她吃了鸡蛋。" }] }
+          ]
+        },
+        {
+          unitId: "M4",
+          unitName: "Module 4 Library",
+          words: [
+            { word: "sent", phonetic: "/sent/", meaning: "发送（过去式）", example: "I sent you a book.", exampleCn: "我给你寄了一本书。", tags: ["动词", "四会词"] },
+            { word: "received", phonetic: "/rɪˈsiːvd/", meaning: "收到", example: "I received a letter.", exampleCn: "我收到了一封信。", tags: ["动词", "四会词"] },
+            { word: "e-card", phonetic: "/ˈiː kɑːrd/", meaning: "电子贺卡", example: "I sent an e-card.", exampleCn: "我发了一张电子贺卡。", tags: ["科技", "四会词"] },
+            { word: "message", phonetic: "/ˈmesɪdʒ/", meaning: "信息", example: "I sent a message.", exampleCn: "我发了一条信息。", tags: ["通讯", "四会词"] },
+            { word: "another", phonetic: "/əˈnʌðər/", meaning: "另一个", example: "Another book.", exampleCn: "另一本书。", tags: ["代词", "四会词"] },
+            { word: "idea", phonetic: "/aɪˈdɪə/", meaning: "主意", example: "Good idea!", exampleCn: "好主意！", tags: ["名词", "四会词"] },
+            { word: "special", phonetic: "/ˈspeʃl/", meaning: "特别的", example: "A special day.", exampleCn: "特别的一天。", tags: ["形容词", "三会词"] },
+            { word: "computer", phonetic: "/kəmˈpjuːtər/", meaning: "电脑", example: "I use the computer.", exampleCn: "我使用电脑。", tags: ["科技", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 4 Unit 1", title: "Messages", content: [{ en: "Did you send me a book?", cn: "你给我寄了一本书吗？" }, { en: "Yes, I did.", cn: "是的，我寄了。" }] }
+          ]
+        }
+      ]
+    },
+    // ==================== 六年级下册 ====================
+    "6-2": {
+      semester: "下册",
+      units: [
+        {
+          unitId: "M1",
+          unitName: "Module 1 Hot Dogs",
+          words: [
+            { word: "hot dog", phonetic: "/hɒt dɒɡ/", meaning: "热狗", example: "I want a hot dog.", exampleCn: "我想要一个热狗。", tags: ["食物", "四会词"] },
+            { word: "waitress", phonetic: "/ˈweɪtrəs/", meaning: "女服务员", example: "The waitress is nice.", exampleCn: "女服务员很好。", tags: ["职业", "四会词"] },
+            { word: "cola", phonetic: "/ˈkəʊlə/", meaning: "可乐", example: "I want a cola.", exampleCn: "我想要一杯可乐。", tags: ["饮料", "四会词"] },
+            { word: "dollar", phonetic: "/ˈdɒlər/", meaning: "美元", example: "One dollar.", exampleCn: "一美元。", tags: ["货币", "四会词"] },
+            { word: "cent", phonetic: "/sent/", meaning: "美分", example: "Fifty cents.", exampleCn: "五十美分。", tags: ["货币", "四会词"] },
+            { word: "enjoy", phonetic: "/ɪnˈdʒɔɪ/", meaning: "享受", example: "Enjoy your meal!", exampleCn: "请享用你的餐点！", tags: ["动词", "四会词"] },
+            { word: "meal", phonetic: "/miːl/", meaning: "一餐", example: "Enjoy your meal!", exampleCn: "请享用你的餐点！", tags: ["食物", "三会词"] },
+            { word: "cashier", phonetic: "/kæˈʃɪər/", meaning: "收银员", example: "The cashier is friendly.", exampleCn: "收银员很友好。", tags: ["职业", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 1 Unit 1", title: "At the Restaurant", content: [{ en: "What do you want to eat?", cn: "你想吃什么？" }, { en: "I want a hot dog.", cn: "我想要一个热狗。" }] }
+          ]
+        },
+        {
+          unitId: "M2",
+          unitName: "Module 2 Bells",
+          words: [
+            { word: "bell", phonetic: "/bel/", meaning: "钟", example: "The bell is ringing.", exampleCn: "钟在响。", tags: ["物品", "四会词"] },
+            { word: "ring", phonetic: "/rɪŋ/", meaning: "响", example: "The bell is ringing.", exampleCn: "钟在响。", tags: ["动词", "四会词"] },
+            { word: "rang", phonetic: "/ræŋ/", meaning: "响（过去式）", example: "The bell rang.", exampleCn: "钟响了。", tags: ["动词", "四会词"] },
+            { word: "bark", phonetic: "/bɑːrk/", meaning: "吠叫", example: "The dog barked.", exampleCn: "狗叫了。", tags: ["动词", "四会词"] },
+            { word: "arrive", phonetic: "/əˈraɪv/", meaning: "到达", example: "We arrived home.", exampleCn: "我们到家了。", tags: ["动词", "四会词"] },
+            { word: "hardly", phonetic: "/ˈhɑːrdli/", meaning: "几乎不", example: "I can hardly hear.", exampleCn: "我几乎听不见。", tags: ["副词", "四会词"] },
+            { word: "noisy", phonetic: "/ˈnɔɪzi/", meaning: "吵闹的", example: "It's very noisy.", exampleCn: "很吵。", tags: ["形容词", "三会词"] },
+            { word: "telephone", phonetic: "/ˈtelɪfəʊn/", meaning: "电话", example: "Answer the telephone.", exampleCn: "接电话。", tags: ["物品", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 2 Unit 1", title: "The Bell", content: [{ en: "The bell is ringing.", cn: "钟在响。" }, { en: "It's time to go home.", cn: "该回家了。" }] }
+          ]
+        },
+        {
+          unitId: "M3",
+          unitName: "Module 3 Sun",
+          words: [
+            { word: "sun", phonetic: "/sʌn/", meaning: "太阳", example: "The sun is shining.", exampleCn: "太阳在照耀。", tags: ["自然", "四会词"] },
+            { word: "shine", phonetic: "/ʃaɪn/", meaning: "照耀", example: "The sun is shining.", exampleCn: "太阳在照耀。", tags: ["动词", "四会词"] },
+            { word: "shining", phonetic: "/ˈʃaɪnɪŋ/", meaning: "照耀（现在分词）", example: "The sun is shining.", exampleCn: "太阳在照耀。", tags: ["动词", "四会词"] },
+            { word: "cry", phonetic: "/kraɪ/", meaning: "哭", example: "The baby is crying.", exampleCn: "宝宝在哭。", tags: ["动词", "四会词"] },
+            { word: "everyone", phonetic: "/ˈevriwʌn/", meaning: "每个人", example: "Everyone is happy.", exampleCn: "每个人都很开心。", tags: ["代词", "四会词"] },
+            { word: "fly away", phonetic: "/flaɪ əˈweɪ/", meaning: "飞走", example: "The bird is flying away.", exampleCn: "鸟正在飞走。", tags: ["短语", "四会词"] },
+            { word: "just", phonetic: "/dʒʌst/", meaning: "刚刚", example: "I just arrived.", exampleCn: "我刚到。", tags: ["副词", "三会词"] },
+            { word: "dry", phonetic: "/draɪ/", meaning: "干的", example: "The clothes are dry.", exampleCn: "衣服干了。", tags: ["形容词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 3 Unit 1", title: "The Sun", content: [{ en: "The sun is shining.", cn: "太阳在照耀。" }, { en: "The birds are singing.", cn: "鸟儿在唱歌。" }] }
+          ]
+        },
+        {
+          unitId: "M4",
+          unitName: "Module 4 Goodbye",
+          words: [
+            { word: "middle", phonetic: "/ˈmɪdl/", meaning: "中间的", example: "middle school", exampleCn: "中学", tags: ["形容词", "四会词"] },
+            { word: "middle school", phonetic: "/ˈmɪdl skuːl/", meaning: "中学", example: "I'm going to middle school.", exampleCn: "我将要上中学了。", tags: ["地点", "四会词"] },
+            { word: "really", phonetic: "/ˈrɪəli/", meaning: "真正地", example: "I'm really happy.", exampleCn: "我真的很开心。", tags: ["副词", "四会词"] },
+            { word: "geography", phonetic: "/dʒiˈɒɡrəfi/", meaning: "地理", example: "I like geography.", exampleCn: "我喜欢地理。", tags: ["学科", "四会词"] },
+            { word: "remember", phonetic: "/rɪˈmembər/", meaning: "记住", example: "I will remember you.", exampleCn: "我会记住你的。", tags: ["动词", "四会词"] },
+            { word: "forever", phonetic: "/fərˈevər/", meaning: "永远", example: "Friends forever.", exampleCn: "永远的朋友。", tags: ["副词", "四会词"] },
+            { word: "wonderful", phonetic: "/ˈwʌndərfl/", meaning: "极好的", example: "A wonderful time.", exampleCn: "一段美好的时光。", tags: ["形容词", "三会词"] },
+            { word: "happiness", phonetic: "/ˈhæpinəs/", meaning: "幸福", example: "I wish you happiness.", exampleCn: "我祝你幸福。", tags: ["名词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Module 4 Unit 1", title: "Goodbye", content: [{ en: "I'm going to middle school.", cn: "我将要上中学了。" }, { en: "Best wishes to you!", cn: "向你致以最美好的祝愿！" }] }
+          ]
+        }
+      ]
     }
   }
 };
