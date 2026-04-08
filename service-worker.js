@@ -1,7 +1,7 @@
 // Service Worker for 小学英语同步学习平台
 // 实现离线访问功能
 
-const CACHE_NAME = 'english-cs-v2.0';
+const CACHE_NAME = 'english-cs-v3.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
