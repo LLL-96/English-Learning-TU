@@ -1,6 +1,112 @@
 // 小学英语同步学习平台 - 主应用逻辑
 // 支持单元学习、收藏、听写、测试、统计等功能
 
+// ==================== 错误处理和日志系统 ====================
+const ErrorHandler = {
+    errors: [],
+    maxErrors: 50,
+    
+    log(error, context = '') {
+        const errorInfo = {
+            timestamp: new Date().toISOString(),
+            message: error.message || error,
+            stack: error.stack,
+            context: context
+        };
+        
+        this.errors.push(errorInfo);
+        
+        // 限制错误日志数量
+        if (this.errors.length > this.maxErrors) {
+            this.errors.shift();
+        }
+        
+        // 控制台输出
+        console.error(`[Error] ${context}:`, error);
+        
+        // 可以在这里添加错误上报逻辑
+        // this.report(errorInfo);
+    },
+    
+    getErrors() {
+        return [...this.errors];
+    },
+    
+    clear() {
+        this.errors = [];
+    },
+    
+    // 包装函数，自动捕获错误
+    wrap(fn, context = '') {
+        return (...args) => {
+            try {
+                return fn.apply(this, args);
+            } catch (error) {
+                this.log(error, context);
+                throw error;
+            }
+        };
+    },
+    
+    // 异步函数包装
+    asyncWrap(fn, context = '') {
+        return async (...args) => {
+            try {
+                return await fn.apply(this, args);
+            } catch (error) {
+                this.log(error, context);
+                throw error;
+            }
+        };
+    }
+};
+
+// 全局错误监听
+window.addEventListener('error', (event) => {
+    ErrorHandler.log(event.error || event.message, 'Global');
+    showUserFriendlyError('抱歉，发生了一些错误，请刷新页面重试。');
+});
+
+// Promise 错误监听
+window.addEventListener('unhandledrejection', (event) => {
+    ErrorHandler.log(event.reason, 'Unhandled Promise');
+    showUserFriendlyError('操作失败，请稍后重试。');
+});
+
+// 用户友好的错误提示
+function showUserFriendlyError(message) {
+    // 创建错误提示元素
+    let errorToast = document.getElementById('error-toast');
+    if (!errorToast) {
+        errorToast = document.createElement('div');
+        errorToast.id = 'error-toast';
+        errorToast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4444;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        `;
+        document.body.appendChild(errorToast);
+    }
+    
+    errorToast.textContent = message;
+    errorToast.style.opacity = '1';
+    
+    // 3秒后自动隐藏
+    setTimeout(() => {
+        errorToast.style.opacity = '0';
+    }, 3000);
+}
+
 // ==================== 全局状态 ====================
 const state = {
     currentVersion: 'pep',
@@ -52,15 +158,22 @@ let studyTimer = null;
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', init);
 
+// 初始化函数，带错误处理
 function init() {
-    loadVoices();
-    loadFromStorage();
-    setupEventListeners();
-    updateVersionDisplay();
-    updateGradeButtons();
-    updateUnitNav();
-    updateWordDisplay();
-    startStudyTimer();
+    try {
+        loadVoices();
+        loadFromStorage();
+        setupEventListeners();
+        updateVersionDisplay();
+        updateGradeButtons();
+        updateUnitNav();
+        updateWordDisplay();
+        startStudyTimer();
+        console.log('应用初始化成功');
+    } catch (error) {
+        ErrorHandler.log(error, 'Init');
+        showUserFriendlyError('应用初始化失败，请刷新页面重试。');
+    }
 }
 
 // ==================== 数据获取 ====================
@@ -276,56 +389,49 @@ function updateVersionDisplay() {
     }
 }
 
+// DOM 操作优化：批量更新，减少重排重绘
 function updateGradeButtons() {
     const versionData = getCurrentData();
     const startGrade = versionData ? (versionData.startGrade || 1) : 1;
     
-    console.log('[DEBUG] updateGradeButtons:', {
-        currentVersion: state.currentVersion,
-        versionData: versionData ? 'exists' : 'null',
-        startGrade: startGrade
-    });
-    
-    const buttons = document.querySelectorAll('.grade-btn');
-
-    buttons.forEach(btn => {
-        const grade = parseInt(btn.dataset.grade);
-        if (grade >= startGrade) {
-            btn.style.display = 'block';
-        } else {
-            btn.style.display = 'none';
-            btn.classList.remove('active');
-        }
-    });
-
     // 如果当前年级不在有效范围内，切换到起始年级
     if (state.currentGrade < startGrade) {
         state.currentGrade = startGrade;
     }
     
-    // 确保当前年级的按钮被激活
-    buttons.forEach(btn => {
-        const grade = parseInt(btn.dataset.grade);
-        if (grade === state.currentGrade) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+    const buttons = document.querySelectorAll('.grade-btn');
+    
+    // 使用 requestAnimationFrame 批量更新 DOM
+    requestAnimationFrame(() => {
+        buttons.forEach(btn => {
+            const grade = parseInt(btn.dataset.grade);
+            const shouldShow = grade >= startGrade;
+            const isActive = grade === state.currentGrade;
+            
+            // 批量修改样式，减少重排
+            btn.style.cssText = shouldShow ? 'display: block;' : 'display: none;';
+            btn.classList.toggle('active', isActive);
+        });
     });
 }
 
+// DOM 操作优化：使用 DocumentFragment 批量创建单元按钮
 function updateUnitNav() {
     const gradeData = getCurrentGradeData();
     const unitButtons = document.getElementById('unit-buttons');
     
     if (!unitButtons) return;
     
+    // 清空现有内容
     unitButtons.innerHTML = '';
     
     if (!gradeData || !gradeData.units) {
         unitButtons.innerHTML = '<p class="empty-hint">该年级暂无单元数据</p>';
         return;
     }
+    
+    // 使用 DocumentFragment 批量创建按钮
+    const fragment = document.createDocumentFragment();
     
     gradeData.units.forEach((unit, index) => {
         const btn = document.createElement('button');
@@ -335,13 +441,22 @@ function updateUnitNav() {
         const wordCount = unit.words ? unit.words.length : 0;
         const learnedCount = getLearnedCount(index);
         
-        btn.innerHTML = `
-            ${unit.unitName}
-            <span class="unit-status">${learnedCount}/${wordCount} 词</span>
-        `;
+        // 使用 textContent 避免 XSS，提高性能
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = unit.unitName;
         
-        unitButtons.appendChild(btn);
+        const statusSpan = document.createElement('span');
+        statusSpan.className = 'unit-status';
+        statusSpan.textContent = `${learnedCount}/${wordCount} 词`;
+        
+        btn.appendChild(nameSpan);
+        btn.appendChild(statusSpan);
+        
+        fragment.appendChild(btn);
     });
+    
+    // 一次性插入所有按钮
+    unitButtons.appendChild(fragment);
     
     updateCurrentUnitName();
 }
@@ -1528,18 +1643,66 @@ function resetProgress() {
     }
 }
 
+// ==================== 计时器管理器（修复内存泄漏）====================
+const TimerManager = {
+    timers: new Map(),
+    
+    start(id, callback, interval) {
+        this.stop(id);
+        const timer = setInterval(callback, interval);
+        this.timers.set(id, timer);
+        return timer;
+    },
+    
+    stop(id) {
+        const timer = this.timers.get(id);
+        if (timer) {
+            clearInterval(timer);
+            this.timers.delete(id);
+        }
+    },
+    
+    stopAll() {
+        this.timers.forEach(timer => clearInterval(timer));
+        this.timers.clear();
+    },
+    
+    pauseAll() {
+        this.timers.forEach((timer, id) => {
+            clearInterval(timer);
+        });
+    },
+    
+    resumeAll(intervals) {
+        intervals.forEach(({ id, callback, interval }) => {
+            this.start(id, callback, interval);
+        });
+    }
+};
+
 // ==================== 学习计时器 ====================
 function startStudyTimer() {
-    studyTimer = setInterval(() => {
+    TimerManager.start('study', () => {
         state.studyStats.studyTime += 10;
         if (state.currentMode === 'stats') {
             updateStats();
         }
-    }, 10000); // 每 10 秒增加一次
+    }, 10000);
 }
 
-// 页面关闭前保存
+// 页面可见性变化时暂停/恢复计时器（节省电量）
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        TimerManager.pauseAll();
+    } else {
+        // 恢复计时器
+        startStudyTimer();
+    }
+});
+
+// 页面关闭前保存和清理
 window.addEventListener('beforeunload', () => {
+    TimerManager.stopAll();
     saveToStorage();
 });
 
