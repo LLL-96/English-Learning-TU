@@ -4,6 +4,7 @@
 const TimerManager = {
     timers: new Map(),
     pausedTimers: new Map(),
+    _visibilityHandlerSet: false,
     
     /**
      * 启动计时器
@@ -117,12 +118,13 @@ const TimerManager = {
      * 页面后台时自动暂停，前台时恢复
      */
     setupVisibilityHandler() {
+        if (this._visibilityHandlerSet) return;
+        this._visibilityHandlerSet = true;
+
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                console.log('页面进入后台，暂停计时器');
                 this.pauseAll();
             } else {
-                console.log('页面回到前台，恢复计时器');
                 this.resumeAll();
             }
         });

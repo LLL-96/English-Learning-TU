@@ -1,7 +1,7 @@
 // 外研社版英语教材数据 - 一年级起点（完整版）
 // 依据最新教材编写，包含 1-6 年级所有单元的单词和课文
 // 数据结构已统一：word, phonetic, meaning, example, exampleCn, tags
-const waiyanData = {
+var waiyanData = window.waiyanData = {
   versionId: "waiyan",
   versionName: "外研社版",
   description: "外语教学与研究出版社 | 一年级起点 | 南方地区广泛使用",

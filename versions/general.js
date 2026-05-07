@@ -1,7 +1,7 @@
 // 通用大纲版英语教材数据 - 综合各版本核心词汇（完整版）
 // 依据最新教材大纲编写，包含 1-6 年级所有单元的单词和课文
 // 数据结构已统一：word, phonetic, meaning, example, exampleCn, tags
-const generalData = {
+var generalData = window.generalData = {
   versionId: "general",
   versionName: "通用大纲版",
   description: "综合各版本核心词汇 | 1-6 年级全覆盖 | 适合通用学习",

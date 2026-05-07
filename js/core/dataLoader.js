@@ -67,75 +67,64 @@ const DataLoader = {
         
         // 检查全局变量（同步加载的数据）
         if (typeof window[dataName] !== 'undefined') {
-            console.log(`[DataLoader] 使用同步加载的 ${version} 数据`);
+            console.log(`[DataLoader] 使用已加载的 ${version} 数据`);
             return window[dataName];
         }
         
-        // 尝试动态导入（如果数据文件支持模块化）
+        // 动态加载脚本
         try {
-            const module = await import(`../../versions/${version}.js`);
-            return module.default || module;
+            await this.loadScript(`versions/${version}.js`);
+            
+            // 加载后检查全局变量（带重试，因为某些浏览器脚本执行可能有延迟）
+            for (let i = 0; i < 5; i++) {
+                if (typeof window[dataName] !== 'undefined') {
+                    console.log(`[DataLoader] 动态加载 ${version} 数据成功`);
+                    return window[dataName];
+                }
+                // 等待一小段时间让脚本副作用完成
+                await new Promise(resolve => setTimeout(resolve, 50 * (i + 1)));
+            }
+            
+            throw new Error(`数据文件加载后未找到全局变量: ${dataName}`);
         } catch (e) {
-            console.warn(`[DataLoader] 动态导入失败:`, e);
+            console.error(`[DataLoader] 加载 ${version} 数据失败:`, e);
+            throw new Error(`无法加载版本数据: ${version}`);
         }
-        
-        throw new Error(`无法加载版本数据: ${version}`);
     },
     
     /**
-     * 加载特定年级数据
-     * @param {string} version - 版本
-     * @param {number} grade - 年级
-     * @param {number} semester - 学期
-     * @returns {Promise<Object>}
+     * 动态加载脚本文件
+     * @param {string} src - 脚本路径
+     * @returns {Promise<void>}
      */
-    async loadGradeData(version, grade, semester = 1) {
-        const cacheKey = `${version}-${grade}-${semester}`;
-        
-        // 检查缓存
-        const cached = this.getFromCache(cacheKey);
-        if (cached) {
-            return cached;
-        }
-        
-        // 加载完整版本数据
-        const versionData = await this.loadVersionData(version);
-        
-        if (!versionData || !versionData.grades) {
-            throw new Error(`版本数据无效: ${version}`);
-        }
-        
-        // 获取年级数据
-        const gradeKey = `${grade}-${semester === 1 ? '上册' : '下册'}`;
-        const gradeData = versionData.grades[gradeKey];
-        
-        if (!gradeData) {
-            throw new Error(`未找到年级数据: ${version} ${gradeKey}`);
-        }
-        
-        // 缓存年级数据
-        this.setCache(cacheKey, gradeData);
-        
-        return gradeData;
+    loadScript(src) {
+        return new Promise((resolve, reject) => {
+            // 检查是否已存在相同脚本
+            const existing = document.querySelector(`script[src="${src}"]`);
+            if (existing) {
+                resolve();
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = false; // 确保按顺序执行
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`脚本加载失败: ${src}`));
+            document.head.appendChild(script);
+        });
     },
     
     /**
      * 预加载数据
-     * @param {Array} keys - 要预加载的键列表
+     * @param {Array} keys - 要预加载的版本名称列表
      */
     async preload(keys) {
         const promises = keys.map(key => {
-            if (typeof key === 'string') {
-                return this.loadVersionData(key).catch(e => {
-                    console.warn(`[DataLoader] 预加载失败: ${key}`, e);
-                    return null;
-                });
-            } else if (typeof key === 'object') {
-                return this.loadGradeData(key.version, key.grade, key.semester).catch(e => {
-                    console.warn(`[DataLoader] 预加载失败:`, key, e);
-                    return null;
-                });
-            }
+            return this.loadVersionData(key).catch(e => {
+                console.warn(`[DataLoader] 预加载失败: ${key}`, e);
+                return null;
+            });
         });
         
         await Promise.all(promises);

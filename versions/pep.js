@@ -2,7 +2,7 @@
 // 包含 3-6 年级上下册全部内容
 // 生成时间: 2026-04
 
-const pepData = {
+var pepData = window.pepData = {
   versionId: "pep",
   versionName: "人教版 PEP",
   description: "人民教育出版社 | 三年级起点 | 全国使用最广 | 含上下册",

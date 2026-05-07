@@ -4,6 +4,7 @@ const ErrorHandler = {
     errors: [],
     maxErrors: 50,
     listeners: [],
+    _globalHandlersSet: false,
     
     /**
      * 记录错误
@@ -122,12 +123,18 @@ const ErrorHandler = {
      * 设置全局错误监听
      */
     setupGlobalHandlers() {
-        // JavaScript 运行时错误
+        if (this._globalHandlersSet) return;
+        this._globalHandlersSet = true;
+
+        // JavaScript 运行时错误（排除资源加载错误）
         window.addEventListener('error', (event) => {
+            // 资源加载错误由捕获阶段的监听器处理
+            if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+                return;
+            }
+            
             this.log(event.error || event.message, 'Global');
             this.showUserFriendlyMessage('抱歉，发生了一些错误，请刷新页面重试。');
-            
-            // 阻止默认处理
             event.preventDefault();
         });
         
@@ -135,14 +142,14 @@ const ErrorHandler = {
         window.addEventListener('unhandledrejection', (event) => {
             this.log(event.reason, 'Unhandled Promise');
             this.showUserFriendlyMessage('操作失败，请稍后重试。');
-            
             event.preventDefault();
         });
         
-        // 资源加载错误
+        // 资源加载错误（捕获阶段，仅处理资源加载）
         window.addEventListener('error', (event) => {
-            if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT')) {
-                this.log(`资源加载失败: ${event.target.src}`, 'Resource');
+            if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+                this.log(`资源加载失败: ${event.target.src || event.target.href}`, 'Resource');
+                // 资源加载失败不需要弹提示，只记录日志
             }
         }, true);
     },

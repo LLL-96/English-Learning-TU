@@ -1,7 +1,7 @@
 // Service Worker for 小学英语同步学习平台
 // 实现离线访问功能 - 优化版本
 
-const CACHE_VERSION = '6.0';
+const CACHE_VERSION = '10.0';
 const CACHE_NAME = `english-cs-v${CACHE_VERSION}`;
 
 // 核心资源 - 优先缓存
@@ -86,12 +86,20 @@ self.addEventListener('fetch', (event) => {
   // 只处理 GET 请求
   if (event.request.method !== 'GET') return;
   
+  // 跳过非 HTTP(S) 协议的请求（如 chrome-extension://）
   const url = new URL(event.request.url);
+  if (!url.protocol.startsWith('http')) return;
+  
+  // HTML 页面：Network First（确保总是获取最新版本）
+  if (url.pathname.endsWith('/') || url.pathname.endsWith('.html') || url.pathname === '/') {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
   
   // 根据资源类型选择策略
   if (isCoreAsset(url.pathname)) {
-    // 核心资源：Cache First
-    event.respondWith(cacheFirst(event.request));
+    // 核心资源：Stale While Revalidate（先用缓存，后台更新）
+    event.respondWith(staleWhileRevalidate(event.request));
   } else if (isDataAsset(url.pathname)) {
     // 数据资源：Stale While Revalidate
     event.respondWith(staleWhileRevalidate(event.request));

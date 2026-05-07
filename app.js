@@ -1,166 +1,28 @@
 // 小学英语同步学习平台 - 主应用逻辑
 // 支持单元学习、收藏、听写、测试、统计等功能
+// 使用 js/core/ 和 js/utils/ 模块
 
-// ==================== 错误处理和日志系统 ====================
-const ErrorHandler = {
-    errors: [],
-    maxErrors: 50,
-    
-    log(error, context = '') {
-        const errorInfo = {
-            timestamp: new Date().toISOString(),
-            message: error.message || error,
-            stack: error.stack,
-            context: context
-        };
-        
-        this.errors.push(errorInfo);
-        
-        // 限制错误日志数量
-        if (this.errors.length > this.maxErrors) {
-            this.errors.shift();
-        }
-        
-        // 控制台输出
-        console.error(`[Error] ${context}:`, error);
-        
-        // 可以在这里添加错误上报逻辑
-        // this.report(errorInfo);
-    },
-    
-    getErrors() {
-        return [...this.errors];
-    },
-    
-    clear() {
-        this.errors = [];
-    },
-    
-    // 包装函数，自动捕获错误
-    wrap(fn, context = '') {
-        return (...args) => {
-            try {
-                return fn.apply(this, args);
-            } catch (error) {
-                this.log(error, context);
-                throw error;
-            }
-        };
-    },
-    
-    // 异步函数包装
-    asyncWrap(fn, context = '') {
-        return async (...args) => {
-            try {
-                return await fn.apply(this, args);
-            } catch (error) {
-                this.log(error, context);
-                throw error;
-            }
-        };
-    }
-};
-
-// 全局错误监听
-window.addEventListener('error', (event) => {
-    ErrorHandler.log(event.error || event.message, 'Global');
-    showUserFriendlyError('抱歉，发生了一些错误，请刷新页面重试。');
-});
-
-// Promise 错误监听
-window.addEventListener('unhandledrejection', (event) => {
-    ErrorHandler.log(event.reason, 'Unhandled Promise');
-    showUserFriendlyError('操作失败，请稍后重试。');
-});
-
-// 用户友好的错误提示
-function showUserFriendlyError(message) {
-    // 创建错误提示元素
-    let errorToast = document.getElementById('error-toast');
-    if (!errorToast) {
-        errorToast = document.createElement('div');
-        errorToast.id = 'error-toast';
-        errorToast.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ff4444;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10000;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        `;
-        document.body.appendChild(errorToast);
-    }
-    
-    errorToast.textContent = message;
-    errorToast.style.opacity = '1';
-    
-    // 3秒后自动隐藏
-    setTimeout(() => {
-        errorToast.style.opacity = '0';
-    }, 3000);
-}
-
-// ==================== 全局状态 ====================
-const state = {
-    currentVersion: 'pep',
-    currentGrade: 3,
-    currentSemester: 1,
-    currentUnit: 0,
-    currentMode: 'words',
-    currentWordIndex: 0,
-    currentTextIndex: 0,
-    voices: [],
-    
-    // 学习数据
-    favorites: [],
-    studyStats: {
-        studyTime: 0,
-        wordsLearned: 0,
-        dictationHistory: [],
-        testHistory: []
-    },
-    
-    // 测试状态
-    testScore: 0,
-    currentQuestion: 1,
-    currentTestWord: null,
-
-    // 听写状态
-    dictationIndex: 0,
-    dictationWords: [],
-    dictationResults: [],
-
-    // 夜间模式
-    darkMode: false,
-    
-    // 语音偏好
-    accent: 'auto',
-    
-    // 拼写练习状态
-    spellingIndex: 0,
-    spellingWords: [],
-    spellingResults: [],
-    
-    // 连读状态
-    isPlayingAll: false
-};
-
-let synth = window.speechSynthesis;
-let studyTimer = null;
+// ==================== 初始化模块 ====================
+// 使用 StateManager 创建响应式状态
+const state = StateManager.init();
 
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', init);
 
-// 初始化函数，带错误处理
 function init() {
     try {
+        PerformanceMonitor.init();
+        PerformanceMonitor.startTimer('app-init');
+        
+        // 初始化移动端优化
+        MobileOptimizer.init();
+        
+        // 将已同步加载的数据注册到 DataLoader 缓存
+        // 使用 window 对象显式检查，避免 const/let 作用域问题
+        if (window.pepData) DataLoader.setCache('pep', window.pepData);
+        if (window.waiyanData) DataLoader.setCache('waiyan', window.waiyanData);
+        if (window.generalData) DataLoader.setCache('general', window.generalData);
+        
         loadVoices();
         loadFromStorage();
         setupEventListeners();
@@ -169,24 +31,64 @@ function init() {
         updateUnitNav();
         updateWordDisplay();
         startStudyTimer();
+        
+        // 异步预加载其他版本数据（不阻塞主流程）
+        const otherVersions = ['pep', 'waiyan', 'general'].filter(v => !DataLoader.getFromCache(v));
+        if (otherVersions.length > 0) {
+            DataLoader.preload(otherVersions);
+        }
+        
+        // 订阅关键状态变化，防抖自动保存（避免遗漏）
+        let saveTimer = null;
+        const debounceSave = () => {
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => saveToStorage(), 500);
+        };
+        ['currentVersion', 'currentGrade', 'currentSemester', 'currentUnit', 'accent', 'darkMode'].forEach(key => {
+            StateManager.subscribe(key, debounceSave);
+        });
+        StateManager.subscribe('darkMode', (val) => {
+            document.body.classList.toggle('dark-mode', val);
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) toggle.textContent = val ? '☀️' : '🌙';
+        });
+        
+        PerformanceMonitor.endTimer('app-init');
         console.log('应用初始化成功');
     } catch (error) {
         ErrorHandler.log(error, 'Init');
-        showUserFriendlyError('应用初始化失败，请刷新页面重试。');
+        ErrorHandler.showUserFriendlyMessage('应用初始化失败，请刷新页面重试。');
     }
 }
 
 // ==================== 数据获取 ====================
 function getCurrentData() {
-    switch (state.currentVersion) {
-        case 'pep':
-            return typeof pepData !== 'undefined' ? pepData : null;
-        case 'waiyan':
-            return typeof waiyanData !== 'undefined' ? waiyanData : null;
-        case 'general':
-            return typeof generalData !== 'undefined' ? generalData : null;
-        default:
-            return null;
+    // 优先从 DataLoader 缓存获取
+    const cached = DataLoader.getFromCache(state.currentVersion);
+    if (cached) return cached;
+    
+    // 回退到全局变量（使用 window 对象显式检查）
+    const versionMap = {
+        'pep': window.pepData || null,
+        'waiyan': window.waiyanData || null,
+        'general': window.generalData || null
+    };
+    
+    const data = versionMap[state.currentVersion] || null;
+    // 如果从全局变量获取到数据，同步写入缓存
+    if (data) DataLoader.setCache(state.currentVersion, data);
+    return data;
+}
+
+// 异步加载指定版本数据
+async function ensureVersionData(version) {
+    try {
+        const data = await DataLoader.loadVersionData(version);
+        return data;
+    } catch (error) {
+        ErrorHandler.log(error, 'DataLoader');
+        ErrorHandler.showUserFriendlyMessage(`加载${version === 'pep' ? '人教版' : version === 'waiyan' ? '外研社版' : '通用版'}数据失败，请检查网络连接`, { type: 'warning' });
+        return null;
     }
 }
 
@@ -194,19 +96,16 @@ function getCurrentGradeData() {
     const versionData = getCurrentData();
     if (!versionData || !versionData.grades) return null;
 
-    // 根据学期选择返回对应的数据
     const gradeKey = state.currentSemester === 2 
-        ? `${state.currentGrade}-2`  // 下册
-        : state.currentGrade;         // 上册
+        ? `${state.currentGrade}-2`
+        : state.currentGrade;
     const gradeData = versionData.grades[gradeKey];
     if (!gradeData) return null;
 
-    // 统一数据结构（按单元组织）
     if (gradeData.units) {
         return gradeData;
     }
 
-    // 兼容旧版本：如果没有 units，返回 null
     console.warn('该年级数据未按单元组织');
     return null;
 }
@@ -222,7 +121,6 @@ function getAllWords() {
     const gradeData = getCurrentGradeData();
     if (!gradeData || !gradeData.units) return [];
 
-    // 统一结构：合并所有单元的单词
     return gradeData.units.flatMap(unit =>
         (unit.words || []).map(word => ({...word, unit: unit.unitName}))
     );
@@ -240,10 +138,26 @@ function getCurrentUnitTexts() {
 
 // ==================== 事件监听 ====================
 function setupEventListeners() {
-    // 版本选择
-    document.getElementById('version-select').addEventListener('change', function() {
-        state.currentVersion = this.value;
-        state.currentGrade = this.value === 'pep' ? 3 : (this.value === 'waiyan' ? 1 : 1);
+    // 版本选择（支持异步加载数据）
+    document.getElementById('version-select').addEventListener('change', async function() {
+        const newVersion = this.value;
+        
+        // 显示加载状态
+        LoadingManager.show('正在加载教材数据...');
+        
+        // 确保数据已加载
+        const versionData = await ensureVersionData(newVersion);
+        
+        if (!versionData) {
+            LoadingManager.hide();
+            ErrorHandler.showUserFriendlyMessage('数据加载失败，请刷新页面重试', { type: 'warning' });
+            // 恢复之前的版本选择
+            this.value = state.currentVersion;
+            return;
+        }
+        
+        state.currentVersion = newVersion;
+        state.currentGrade = newVersion === 'pep' ? 3 : (newVersion === 'waiyan' ? 1 : 1);
         state.currentUnit = 0;
         state.currentWordIndex = 0;
         state.currentTextIndex = 0;
@@ -253,6 +167,12 @@ function setupEventListeners() {
         updateUnitNav();
         updateWordDisplay();
         updateTextDisplay();
+        
+        LoadingManager.hide();
+        
+        // 预加载其他版本数据（后台加载，不阻塞）
+        const otherVersions = ['pep', 'waiyan', 'general'].filter(v => v !== newVersion);
+        DataLoader.preload(otherVersions);
     });
 
     // 年级选择
@@ -333,8 +253,8 @@ function setupEventListeners() {
     if (accentSelect) {
         accentSelect.addEventListener('change', function() {
             state.accent = this.value;
-            localStorage.setItem('englishCS-accent', this.value);
-            loadVoices(); // 重新加载语音列表
+            saveToStorage();
+            loadVoices();
         });
     }
 
@@ -365,6 +285,14 @@ function setupEventListeners() {
             }
         });
     }
+
+    // 滑动手势支持（移动端翻页）
+    document.addEventListener('swipeleft', () => {
+        if (state.currentMode === 'words') nextWord();
+    });
+    document.addEventListener('swiperight', () => {
+        if (state.currentMode === 'words') prevWord();
+    });
 }
 
 // ==================== 界面更新 ====================
@@ -376,10 +304,8 @@ function updateVersionDisplay() {
         versionDesc.textContent = versionData.description;
     }
 
-    // 根据版本数据显示学期选择器
     const semesterSelector = document.getElementById('semester-selector');
     if (semesterSelector) {
-        // 所有版本都显示上下册选择器
         semesterSelector.style.display = 'flex';
         const semesterBtns = semesterSelector.querySelectorAll('.semester-btn');
         semesterBtns.forEach(btn => {
@@ -389,40 +315,34 @@ function updateVersionDisplay() {
     }
 }
 
-// DOM 操作优化：批量更新，减少重排重绘
 function updateGradeButtons() {
     const versionData = getCurrentData();
     const startGrade = versionData ? (versionData.startGrade || 1) : 1;
     
-    // 如果当前年级不在有效范围内，切换到起始年级
     if (state.currentGrade < startGrade) {
         state.currentGrade = startGrade;
     }
     
     const buttons = document.querySelectorAll('.grade-btn');
     
-    // 使用 requestAnimationFrame 批量更新 DOM
     requestAnimationFrame(() => {
         buttons.forEach(btn => {
             const grade = parseInt(btn.dataset.grade);
             const shouldShow = grade >= startGrade;
             const isActive = grade === state.currentGrade;
             
-            // 批量修改样式，减少重排
             btn.style.cssText = shouldShow ? 'display: block;' : 'display: none;';
             btn.classList.toggle('active', isActive);
         });
     });
 }
 
-// DOM 操作优化：使用 DocumentFragment 批量创建单元按钮
 function updateUnitNav() {
     const gradeData = getCurrentGradeData();
     const unitButtons = document.getElementById('unit-buttons');
     
     if (!unitButtons) return;
     
-    // 清空现有内容
     unitButtons.innerHTML = '';
     
     if (!gradeData || !gradeData.units) {
@@ -430,7 +350,6 @@ function updateUnitNav() {
         return;
     }
     
-    // 使用 DocumentFragment 批量创建按钮
     const fragment = document.createDocumentFragment();
     
     gradeData.units.forEach((unit, index) => {
@@ -441,7 +360,6 @@ function updateUnitNav() {
         const wordCount = unit.words ? unit.words.length : 0;
         const learnedCount = getLearnedCount(index);
         
-        // 使用 textContent 避免 XSS，提高性能
         const nameSpan = document.createElement('span');
         nameSpan.textContent = unit.unitName;
         
@@ -455,7 +373,6 @@ function updateUnitNav() {
         fragment.appendChild(btn);
     });
     
-    // 一次性插入所有按钮
     unitButtons.appendChild(fragment);
     
     updateCurrentUnitName();
@@ -472,25 +389,21 @@ function updateCurrentUnitName() {
 function switchMode(mode) {
     state.currentMode = mode;
     
-    // 更新按钮状态
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === mode);
     });
     
-    // 隐藏所有内容区
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
         section.style.display = 'none';
     });
     
-    // 显示目标内容区
     const targetSection = document.getElementById(mode + '-section');
     if (targetSection) {
         targetSection.style.display = 'block';
         setTimeout(() => targetSection.classList.add('active'), 10);
     }
     
-    // 初始化特定模式
     switch(mode) {
         case 'words':
             updateWordDisplay();
@@ -523,7 +436,9 @@ function switchMode(mode) {
 function updateWordDisplay() {
     const words = getCurrentUnitWords();
     
-    if (words.length === 0) {
+    if (!words || words.length === 0) {
+        const wordEl = document.querySelector('.english-word');
+        if (wordEl) wordEl.textContent = '暂无单词数据';
         return;
     }
     
@@ -533,7 +448,6 @@ function updateWordDisplay() {
     
     const word = words[state.currentWordIndex];
     
-    // 更新显示
     const elements = {
         word: document.querySelector('.english-word'),
         phonetic: document.querySelector('.phonetic'),
@@ -553,13 +467,11 @@ function updateWordDisplay() {
     if (elements.sentenceCn) elements.sentenceCn.textContent = word.exampleCn;
     if (elements.wordIndex) elements.wordIndex.textContent = state.currentWordIndex + 1;
     
-    // 隐藏例句
     const exampleSection = document.querySelector('.example-sentence');
     if (exampleSection) {
         exampleSection.style.display = 'none';
     }
     
-    // 显示标签
     if (elements.tags && word.tags) {
         elements.tags.innerHTML = word.tags.map(tag => 
             `<span class="word-tag">${tag}</span>`
@@ -568,20 +480,14 @@ function updateWordDisplay() {
         elements.tags.innerHTML = '';
     }
     
-    // 更新进度
     if (elements.progressFill && elements.progressText) {
         const progress = ((state.currentWordIndex + 1) / words.length) * 100;
         elements.progressFill.style.width = progress + '%';
         elements.progressText.textContent = `${state.currentWordIndex + 1} / ${words.length}`;
     }
     
-    // 更新收藏按钮状态
     updateFavoriteButton();
-    
-    // 更新列表视图
     updateWordListView();
-    
-    // 更新单元进度
     updateUnitProgress();
 }
 
@@ -667,37 +573,48 @@ function nextWord() {
 }
 
 function playAllWords() {
-    // 如果正在连读，则停止
     if (state.isPlayingAll) {
         stopPlayAll();
         return;
     }
 
     const words = getCurrentUnitWords();
-    let index = 0;
+    if (words.length === 0) return;
+    
     state.isPlayingAll = true;
-
-    // 更新按钮文本
     updatePlayAllButton(true);
 
-    function playNext() {
-        if (!state.isPlayingAll || index >= words.length) {
-            state.isPlayingAll = false;
-            updatePlayAllButton(false);
-            return;
-        }
-        
-        speak(words[index].word);
-        index++;
-        setTimeout(playNext, 1500);
-    }
+    const rateInput = document.getElementById('rate');
+    const rate = rateInput ? parseFloat(rateInput.value) : 0.8;
+    const voice = getSelectedVoice();
+    const accentMap = { 'en-US': 'us', 'en-GB': 'uk', 'auto': 'auto' };
+    const accent = accentMap[state.accent] || 'auto';
 
-    playNext();
+    const texts = words.map(w => w.word);
+    
+    SpeechManager.speakAll(texts, {
+        rate,
+        accent,
+        voice,
+        pauseBetween: 800,
+        onProgress: (i) => {
+            // 高亮当前播放的单词
+            state.currentWordIndex = i;
+            updateWordDisplay();
+        }
+    }).then(() => {
+        state.isPlayingAll = false;
+        updatePlayAllButton(false);
+    }).catch(() => {
+        // 用户停止或其他错误
+        state.isPlayingAll = false;
+        updatePlayAllButton(false);
+    });
 }
 
 function stopPlayAll() {
     state.isPlayingAll = false;
-    synth.cancel();
+    SpeechManager.stop();
     updatePlayAllButton(false);
 }
 
@@ -772,7 +689,6 @@ function updateFavoriteButton() {
     const isFavorite = state.favorites.some(f => f.key === key);
     btn.textContent = isFavorite ? '★' : '☆';
     
-    // 添加/移除 active 类以触发 CSS 动画
     if (isFavorite) {
         btn.classList.add('active');
     } else {
@@ -814,7 +730,6 @@ function updateTextDisplay() {
     
     if (!textSelect) return;
     
-    // 更新选择器
     textSelect.innerHTML = '';
     texts.forEach((text, index) => {
         const option = document.createElement('option');
@@ -833,7 +748,6 @@ function updateTextDisplay() {
     
     textSelect.value = state.currentTextIndex;
     
-    // 显示课文
     const text = texts[state.currentTextIndex];
     const textTitle = document.getElementById('text-title');
     const textBody = document.getElementById('text-body');
@@ -842,6 +756,7 @@ function updateTextDisplay() {
     
     if (textBody) {
         textBody.innerHTML = '';
+        const fragment = document.createDocumentFragment();
         text.content.forEach((line, index) => {
             const lineDiv = document.createElement('div');
             lineDiv.className = 'text-line';
@@ -850,8 +765,9 @@ function updateTextDisplay() {
                 <span class="text-cn">${line.cn}</span>
                 <button class="btn-speak-line" onclick="speakTextLine(${index})">🔊</button>
             `;
-            textBody.appendChild(lineDiv);
+            fragment.appendChild(lineDiv);
         });
+        textBody.appendChild(fragment);
     }
 }
 
@@ -886,38 +802,46 @@ function loadVoices() {
 
     if (!voiceSelect || !accentSelect) return;
 
-    // 先设置回调，再获取语音（Chrome 异步加载）
-    if (synth.onvoiceschanged !== undefined) {
-        synth.onvoiceschanged = loadVoices;
+    // 使用 SpeechManager 加载语音
+    SpeechManager.loadVoices();
+    state.voices = SpeechManager.voices;
+    
+    // Chrome 异步加载处理
+    if (SpeechManager.synth.onvoiceschanged !== undefined) {
+        SpeechManager.synth.onvoiceschanged = () => {
+            SpeechManager.loadVoices();
+            state.voices = SpeechManager.voices;
+            populateVoiceList();
+        };
     }
 
-    state.voices = synth.getVoices();
-    
-    // 如果没有语音，等待加载
-    if (state.voices.length === 0) return;
-
     // 加载保存的语音偏好
-    const savedAccent = localStorage.getItem('englishCS-accent');
+    const savedAccent = StorageManager.load().data?.accent;
     if (savedAccent) {
         state.accent = savedAccent;
         accentSelect.value = savedAccent;
     }
 
-    // 清空并重新填充语音列表
+    populateVoiceList();
+}
+
+function populateVoiceList() {
+    const voiceSelect = document.getElementById('voice-select');
+    const accentSelect = document.getElementById('accent-select');
+    if (!voiceSelect) return;
+
     voiceSelect.innerHTML = '<option value="">默认语音</option>';
 
-    // 根据选择的语音类型过滤
-    const selectedAccent = accentSelect.value || 'auto';
+    const selectedAccent = accentSelect ? accentSelect.value : 'auto';
     let filteredVoices = state.voices;
 
     if (selectedAccent !== 'auto') {
         filteredVoices = state.voices.filter(v => v.lang && v.lang.startsWith(selectedAccent));
     } else {
-        // 自动选择：优先显示英语语音
         filteredVoices = state.voices.filter(v => v.lang && v.lang.startsWith('en'));
     }
 
-    filteredVoices.forEach((voice, index) => {
+    filteredVoices.forEach((voice) => {
         const option = document.createElement('option');
         option.value = state.voices.indexOf(voice);
         option.textContent = `${voice.name} (${voice.lang})`;
@@ -925,48 +849,30 @@ function loadVoices() {
     });
 }
 
-// 获取选择的语音
 function getSelectedVoice() {
     const voiceSelect = document.getElementById('voice-select');
     const voiceIndex = voiceSelect ? voiceSelect.value : '';
     
-    // 优先使用用户选择的语音
     if (voiceIndex !== '' && state.voices[voiceIndex]) {
         return state.voices[voiceIndex];
     }
     
-    // 根据语音偏好选择语音
-    return state.voices.find(v => {
-        if (state.accent === 'en-US') {
-            return v.lang && v.lang.startsWith('en-US');
-        } else if (state.accent === 'en-GB') {
-            return v.lang && v.lang.startsWith('en-GB');
-        } else {
-            // 自动选择：任意英语语音
-            return v.lang && v.lang.startsWith('en');
-        }
-    });
+    // 使用 SpeechManager 的语音选择
+    const accentMap = { 'en-US': 'us', 'en-GB': 'uk', 'auto': 'auto' };
+    const accent = accentMap[state.accent] || 'auto';
+    return SpeechManager.getBestVoice(accent);
 }
 
 function speak(text) {
-    if (synth.speaking) {
-        synth.cancel();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
     const rateInput = document.getElementById('rate');
-
-    utterance.rate = rateInput ? parseFloat(rateInput.value) : 0.8;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-
-    // 使用公共函数获取语音
+    const rate = rateInput ? parseFloat(rateInput.value) : 0.8;
     const voice = getSelectedVoice();
-    if (voice) {
-        utterance.voice = voice;
-    }
+    const accentMap = { 'en-US': 'us', 'en-GB': 'uk', 'auto': 'auto' };
+    const accent = accentMap[state.accent] || 'auto';
 
-    synth.speak(utterance);
+    SpeechManager.speak(text, { rate, accent, voice }).catch(() => {
+        // 语音合成失败时静默处理
+    });
 }
 
 // ==================== 单词听写 ====================
@@ -1008,7 +914,6 @@ function startDictation() {
     const dictationAnswer = document.getElementById('dictation-answer');
     if (dictationAnswer) dictationAnswer.style.display = 'none';
     
-    // 自动播放第一个单词
     setTimeout(() => playDictationWord(), 500);
 }
 
@@ -1056,7 +961,6 @@ function checkDictationAnswer() {
     
     dictationInput.disabled = true;
     
-    // 自动进入下一个
     setTimeout(() => {
         state.dictationIndex++;
         
@@ -1093,7 +997,6 @@ function skipDictationWord() {
     const dictationFeedback = document.getElementById('dictation-feedback');
     const dictationAnswer = document.getElementById('dictation-answer');
 
-    // 标记为跳过（不算正确也不算错误）
     state.dictationResults.push(null);
 
     if (dictationFeedback) {
@@ -1106,7 +1009,6 @@ function skipDictationWord() {
         dictationInput.disabled = true;
     }
 
-    // 进入下一个
     setTimeout(() => {
         state.dictationIndex++;
 
@@ -1137,11 +1039,13 @@ function showDictationResult() {
     const totalCount = state.dictationResults.length;
     const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
     
-    document.getElementById('dictation-accuracy').textContent = accuracy + '%';
-    document.getElementById('dictation-correct').textContent = correctCount;
-    document.getElementById('dictation-all').textContent = totalCount;
+    const accEl = document.getElementById('dictation-accuracy');
+    const corEl = document.getElementById('dictation-correct');
+    const allEl = document.getElementById('dictation-all');
+    if (accEl) accEl.textContent = accuracy + '%';
+    if (corEl) corEl.textContent = correctCount;
+    if (allEl) allEl.textContent = totalCount;
     
-    // 保存听写记录
     state.studyStats.dictationHistory.push({
         date: Date.now(),
         accuracy: accuracy,
@@ -1181,11 +1085,9 @@ function generateQuestion() {
         return;
     }
 
-    // 随机选择一个单词作为正确答案
     const correctIndex = Math.floor(Math.random() * words.length);
     state.currentTestWord = words[correctIndex];
 
-    // 生成 3 个错误选项
     const options = [state.currentTestWord];
     while (options.length < 4) {
         const randomIndex = Math.floor(Math.random() * words.length);
@@ -1195,21 +1097,20 @@ function generateQuestion() {
         }
     }
 
-    // 打乱选项顺序
     options.sort(() => Math.random() - 0.5);
 
-    // 显示选项
     const optionsContainer = document.getElementById('test-options');
     if (optionsContainer) {
-        optionsContainer.innerHTML = '';
-
+        const fragment = document.createDocumentFragment();
         options.forEach(option => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = option.meaning;
             btn.onclick = () => checkAnswer(option, state.currentTestWord);
-            optionsContainer.appendChild(btn);
+            fragment.appendChild(btn);
         });
+        optionsContainer.innerHTML = '';
+        optionsContainer.appendChild(fragment);
     }
 
     const resultDiv = document.getElementById('test-result');
@@ -1261,7 +1162,6 @@ function nextQuestion() {
         if (questionNumEl) questionNumEl.textContent = state.currentQuestion;
         generateQuestion();
     } else {
-        // 测试结束
         showTestFinalResult();
     }
 }
@@ -1274,11 +1174,12 @@ function showTestFinalResult() {
     if (finalResult) {
         finalResult.style.display = 'block';
 
-        // 计算百分制分数
         const totalQuestions = state.currentQuestion;
         const finalScore = Math.round((state.testScore / totalQuestions) * 100);
         
-        document.getElementById('final-score').textContent = finalScore;
+        const scoreEl = document.getElementById('final-score');
+        const commentEl = document.getElementById('final-comment');
+        if (scoreEl) scoreEl.textContent = finalScore;
 
         let comment = '';
         if (finalScore >= 90) comment = '🎉 太棒了！';
@@ -1286,10 +1187,9 @@ function showTestFinalResult() {
         else if (finalScore >= 60) comment = '💪 继续加油！';
         else comment = '📚 多多练习！';
 
-        document.getElementById('final-comment').textContent = comment;
+        if (commentEl) commentEl.textContent = comment;
     }
 
-    // 保存测试记录（使用百分制分数）
     const totalQuestions = state.currentQuestion;
     const finalScore = Math.round((state.testScore / totalQuestions) * 100);
     
@@ -1310,7 +1210,6 @@ function renderTagsList() {
     
     if (!tagsList) return;
     
-    // 收集所有标签
     const allTags = new Set();
     words.forEach(word => {
         if (word.tags) {
@@ -1318,17 +1217,14 @@ function renderTagsList() {
         }
     });
     
-    // 显示标签按钮
     tagsList.innerHTML = Array.from(allTags).map(tag =>
         `<button class="tag-btn" data-tag="${tag}">${tag}</button>`
     ).join('');
     
-    // 添加点击事件
     tagsList.querySelectorAll('.tag-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const tag = this.dataset.tag;
             
-            // 切换选中状态
             if (this.classList.contains('active')) {
                 this.classList.remove('active');
                 taggedWords.innerHTML = '<p class="tag-hint">点击标签查看对应单词</p>';
@@ -1375,36 +1271,35 @@ function selectWord(index) {
 
 // ==================== 学习统计 ====================
 function updateStats() {
-    // 学习时长
     const minutes = Math.round(state.studyStats.studyTime / 60);
-    document.getElementById('stat-study-time').textContent = `${minutes} 分钟`;
+    const studyTimeEl = document.getElementById('stat-study-time');
+    const wordsLearnedEl = document.getElementById('stat-words-learned');
+    const dictationRateEl = document.getElementById('stat-dictation-rate');
+    const testAvgEl = document.getElementById('stat-test-avg');
     
-    // 已学单词
-    document.getElementById('stat-words-learned').textContent = `${state.studyStats.wordsLearned} 词`;
+    if (studyTimeEl) studyTimeEl.textContent = `${minutes} 分钟`;
+    if (wordsLearnedEl) wordsLearnedEl.textContent = `${state.studyStats.wordsLearned} 词`;
     
-    // 听写正确率
     const dictationHistory = state.studyStats.dictationHistory;
     if (dictationHistory.length > 0) {
         const avgAccuracy = Math.round(
             dictationHistory.reduce((sum, h) => sum + h.accuracy, 0) / dictationHistory.length
         );
-        document.getElementById('stat-dictation-rate').textContent = `${avgAccuracy}%`;
+        if (dictationRateEl) dictationRateEl.textContent = `${avgAccuracy}%`;
     } else {
-        document.getElementById('stat-dictation-rate').textContent = '0%';
+        if (dictationRateEl) dictationRateEl.textContent = '0%';
     }
     
-    // 测试平均分
     const testHistory = state.studyStats.testHistory;
     if (testHistory.length > 0) {
         const avgScore = Math.round(
             testHistory.reduce((sum, h) => sum + h.score, 0) / testHistory.length
         );
-        document.getElementById('stat-test-avg').textContent = `${avgScore} 分`;
+        if (testAvgEl) testAvgEl.textContent = `${avgScore} 分`;
     } else {
-        document.getElementById('stat-test-avg').textContent = '0 分';
+        if (testAvgEl) testAvgEl.textContent = '0 分';
     }
     
-    // 学习进度图表
     updateProgressBars();
 }
 
@@ -1440,22 +1335,19 @@ function exportProgress() {
     const studyTime = Math.round(state.studyStats.studyTime / 60);
     const wordsLearned = state.studyStats.wordsLearned;
 
-    // 听写统计
     const dictationHistory = state.studyStats.dictationHistory;
     const dictationRate = dictationHistory.length > 0 
         ? Math.round(dictationHistory.reduce((sum, h) => sum + h.accuracy, 0) / dictationHistory.length)
         : 0;
 
-    // 测试统计
     const testHistory = state.studyStats.testHistory;
     const testAvg = testHistory.length > 0
         ? Math.round(testHistory.reduce((sum, h) => sum + h.score, 0) / testHistory.length)
         : 0;
 
-    // 构建导出数据
     const exportData = {
         exportDate: new Date().toLocaleString('zh-CN'),
-        appVersion: 'v2.0',
+        appVersion: 'v2.2',
         studyStats: {
             studyTime: studyTime + ' 分钟',
             wordsLearned: wordsLearned + ' 词',
@@ -1478,10 +1370,7 @@ function exportProgress() {
         }))
     };
 
-    // 转换为 JSON 字符串
     const jsonData = JSON.stringify(exportData, null, 2);
-
-    // 创建下载链接
     const blob = new Blob([jsonData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1511,9 +1400,8 @@ function updateUnitProgress() {
     percentEl.textContent = percent + '%';
     detailEl.textContent = `已学 ${learnedCount} / 共 ${totalCount} 词`;
     
-    // 更新环形进度条
     if (ringFill) {
-        const circumference = 2 * Math.PI * 36; // r=36
+        const circumference = 2 * Math.PI * 36;
         const offset = circumference - (percent / 100) * circumference;
         ringFill.style.strokeDashoffset = offset;
     }
@@ -1549,7 +1437,6 @@ function resetStats() {
             testHistory: []
         };
         
-        // 清除学习进度
         for (let i = 0; i < 10; i++) {
             localStorage.removeItem(`learned-${state.currentVersion}-${state.currentGrade}-${i}`);
         }
@@ -1564,66 +1451,45 @@ function resetStats() {
 function toggleDarkMode() {
     state.darkMode = !state.darkMode;
     document.body.classList.toggle('dark-mode', state.darkMode);
-    document.getElementById('theme-toggle').textContent = state.darkMode ? '☀️' : '🌙';
-    localStorage.setItem('darkMode', state.darkMode);
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) toggle.textContent = state.darkMode ? '☀️' : '🌙';
+    saveToStorage();
 }
 
-// ==================== 存储功能 ====================
+// ==================== 存储功能（使用 StorageManager）====================
 function saveToStorage() {
-    try {
-        localStorage.setItem('englishLearningState', JSON.stringify({
-            currentVersion: state.currentVersion,
-            currentGrade: state.currentGrade,
-            currentSemester: state.currentSemester,
-            currentUnit: state.currentUnit,
-            favorites: state.favorites,
-            studyStats: state.studyStats,
-            darkMode: state.darkMode,
-            accent: state.accent
-        }));
-    } catch (e) {
-        console.error('保存数据失败:', e);
-        alert('⚠️ 保存数据失败，可能是存储空间已满');
+    const result = StorageManager.save(state);
+    if (!result.success) {
+        ErrorHandler.log(new Error(result.error), 'Storage');
+        if (result.type === 'quota_exceeded') {
+            alert('⚠️ 存储空间已满，请清理浏览器数据');
+        }
     }
 }
 
 function loadFromStorage() {
-    try {
-        const saved = localStorage.getItem('englishLearningState');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                state.currentVersion = data.currentVersion || 'pep';
-                // 根据版本设置正确的默认年级
-                const defaultGrade = state.currentVersion === 'pep' ? 3 : 1;
-                state.currentGrade = data.currentGrade || defaultGrade;
-                state.currentSemester = data.currentSemester || 1;
-                state.currentUnit = data.currentUnit || 0;
-                state.favorites = data.favorites || [];
-                state.studyStats = data.studyStats || {
-                    studyTime: 0,
-                    wordsLearned: 0,
-                    dictationHistory: [],
-                    testHistory: []
-                };
-                state.darkMode = data.darkMode || false;
-                state.accent = data.accent || 'auto';
-            } catch (e) {
-                console.error('解析数据失败:', e);
-            }
-        } else {
-            // 没有保存数据时，根据版本设置正确的默认年级
-            const defaultGrade = state.currentVersion === 'pep' ? 3 : 1;
-            state.currentGrade = defaultGrade;
-        }
-    } catch (e) {
-        console.error('加载数据失败:', e);
+    const result = StorageManager.load();
+    
+    if (result.success && result.data) {
+        const data = result.data;
+        state.currentVersion = data.currentVersion;
+        state.currentGrade = data.currentGrade;
+        state.currentSemester = data.currentSemester;
+        state.currentUnit = data.currentUnit;
+        state.favorites = data.favorites;
+        state.studyStats = data.studyStats;
+        state.darkMode = data.darkMode;
+        state.accent = data.accent;
+    } else {
+        const defaultGrade = state.currentVersion === 'pep' ? 3 : 1;
+        state.currentGrade = defaultGrade;
     }
 
     // 加载夜间模式
     if (state.darkMode) {
         document.body.classList.add('dark-mode');
-        document.getElementById('theme-toggle').textContent = '☀️';
+        const toggle = document.getElementById('theme-toggle');
+        if (toggle) toggle.textContent = '☀️';
     }
 }
 
@@ -1632,7 +1498,6 @@ function resetProgress() {
         state.currentWordIndex = 0;
         state.currentTextIndex = 0;
         
-        // 清除单元学习进度
         for (let i = 0; i < 20; i++) {
             localStorage.removeItem(`learned-${state.currentVersion}-${state.currentGrade}-${i}`);
         }
@@ -1643,44 +1508,7 @@ function resetProgress() {
     }
 }
 
-// ==================== 计时器管理器（修复内存泄漏）====================
-const TimerManager = {
-    timers: new Map(),
-    
-    start(id, callback, interval) {
-        this.stop(id);
-        const timer = setInterval(callback, interval);
-        this.timers.set(id, timer);
-        return timer;
-    },
-    
-    stop(id) {
-        const timer = this.timers.get(id);
-        if (timer) {
-            clearInterval(timer);
-            this.timers.delete(id);
-        }
-    },
-    
-    stopAll() {
-        this.timers.forEach(timer => clearInterval(timer));
-        this.timers.clear();
-    },
-    
-    pauseAll() {
-        this.timers.forEach((timer, id) => {
-            clearInterval(timer);
-        });
-    },
-    
-    resumeAll(intervals) {
-        intervals.forEach(({ id, callback, interval }) => {
-            this.start(id, callback, interval);
-        });
-    }
-};
-
-// ==================== 学习计时器 ====================
+// ==================== 学习计时器（使用 TimerManager）====================
 function startStudyTimer() {
     TimerManager.start('study', () => {
         state.studyStats.studyTime += 10;
@@ -1689,16 +1517,6 @@ function startStudyTimer() {
         }
     }, 10000);
 }
-
-// 页面可见性变化时暂停/恢复计时器（节省电量）
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        TimerManager.pauseAll();
-    } else {
-        // 恢复计时器
-        startStudyTimer();
-    }
-});
 
 // 页面关闭前保存和清理
 window.addEventListener('beforeunload', () => {
@@ -1748,7 +1566,6 @@ function startSpelling() {
     const spellingMeaning = document.getElementById('spelling-meaning');
     if (spellingMeaning) spellingMeaning.textContent = '';
 
-    // 自动播放第一个单词
     setTimeout(() => playSpellingWord(), 500);
 }
 
@@ -1761,7 +1578,6 @@ function playSpellingWord() {
     const word = state.spellingWords[state.spellingIndex];
     speak(word.word);
 
-    // 显示中文意思作为提示
     const spellingMeaning = document.getElementById('spelling-meaning');
     if (spellingMeaning) {
         spellingMeaning.textContent = `💭 ${word.meaning}`;
@@ -1779,23 +1595,11 @@ function playSpellingSlow() {
     }
 
     const word = state.spellingWords[state.spellingIndex];
-
-    if (synth.speaking) {
-        synth.cancel();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(word.word);
-    utterance.rate = 0.5; // 更慢的语速
-    utterance.pitch = 1;
-    utterance.volume = 1;
-
-    // 使用公共函数获取语音
     const voice = getSelectedVoice();
-    if (voice) {
-        utterance.voice = voice;
-    }
+    const accentMap = { 'en-US': 'us', 'en-GB': 'uk', 'auto': 'auto' };
+    const accent = accentMap[state.accent] || 'auto';
 
-    synth.speak(utterance);
+    SpeechManager.speak(word.word, { rate: 0.5, accent, voice }).catch(() => {});
 }
 
 function checkSpellingAnswer() {
@@ -1827,7 +1631,6 @@ function checkSpellingAnswer() {
 
     spellingInput.disabled = true;
 
-    // 自动进入下一个
     setTimeout(() => {
         state.spellingIndex++;
 
@@ -1850,7 +1653,6 @@ function showSpellingHint() {
     const spellingHint = document.getElementById('spelling-hint');
     
     if (spellingHint && word) {
-        // 显示单词的首字母和长度
         const firstLetter = word.word.charAt(0);
         const length = word.word.length;
         const masked = firstLetter + '_'.repeat(length - 1);
@@ -1868,7 +1670,6 @@ function skipSpellingWord() {
     const spellingFeedback = document.getElementById('spelling-feedback');
     const spellingHint = document.getElementById('spelling-hint');
 
-    // 标记为跳过
     state.spellingResults.push(null);
 
     if (spellingFeedback) {
@@ -1881,7 +1682,6 @@ function skipSpellingWord() {
         spellingInput.disabled = true;
     }
 
-    // 进入下一个
     setTimeout(() => {
         state.spellingIndex++;
 
@@ -1921,7 +1721,6 @@ function showSpellingResult() {
     if (correctEl) correctEl.textContent = correctCount;
     if (allEl) allEl.textContent = totalCount;
 
-    // 显示错误的单词回顾
     if (reviewEl) {
         const wrongWords = state.spellingResults
             .map((result, index) => {
@@ -1944,7 +1743,6 @@ function showSpellingResult() {
         }
     }
 
-    // 保存拼写练习结果
     saveToStorage();
 }
 

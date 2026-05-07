@@ -83,7 +83,8 @@ const SpeechManager = {
             this.stop();
             
             const utterance = new SpeechSynthesisUtterance(text);
-            const voice = this.getBestVoice(options.accent);
+            // 优先使用传入的 voice，否则根据 accent 自动选择
+            const voice = options.voice || this.getBestVoice(options.accent);
             
             if (voice) {
                 utterance.voice = voice;
@@ -109,6 +110,11 @@ const SpeechManager = {
             utterance.onerror = (event) => {
                 this.isPlaying = false;
                 this.currentUtterance = null;
+                // interrupted/canceled 是正常的停止行为，不应报错
+                if (event.error === 'interrupted' || event.error === 'canceled') {
+                    resolve();
+                    return;
+                }
                 console.error('语音合成错误:', event);
                 if (options.onError) options.onError(event);
                 reject(event);
@@ -175,7 +181,8 @@ const SpeechManager = {
                 options.onProgress(i, texts.length);
             }
             
-            await this.speak(texts[i], options);
+            // 使用 speak 但跳过 stop 调用，避免取消前一个语音
+            await this._speakWithoutStop(texts[i], options);
             
             // 文本间暂停
             if (i < texts.length - 1) {
@@ -184,6 +191,60 @@ const SpeechManager = {
                 );
             }
         }
+    },
+    
+    /**
+     * 朗读文本（不停止当前播放，内部使用）
+     * @param {string} text - 要朗读的文本
+     * @param {Object} options - 选项
+     * @returns {Promise}
+     */
+    _speakWithoutStop(text, options = {}) {
+        return new Promise((resolve, reject) => {
+            if (!this.synth) {
+                reject(new Error('语音合成不可用'));
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voice = options.voice || this.getBestVoice(options.accent);
+            
+            if (voice) {
+                utterance.voice = voice;
+            }
+            
+            utterance.rate = options.rate || 0.8;
+            utterance.pitch = options.pitch || 1;
+            utterance.volume = options.volume || 1;
+            
+            utterance.onstart = () => {
+                this.isPlaying = true;
+                this.currentUtterance = utterance;
+                if (options.onStart) options.onStart();
+            };
+            
+            utterance.onend = () => {
+                this.isPlaying = false;
+                this.currentUtterance = null;
+                if (options.onEnd) options.onEnd();
+                resolve();
+            };
+            
+            utterance.onerror = (event) => {
+                this.isPlaying = false;
+                this.currentUtterance = null;
+                // interrupted 错误是正常的停止行为，不应报错
+                if (event.error === 'interrupted' || event.error === 'canceled') {
+                    resolve();
+                    return;
+                }
+                console.error('语音合成错误:', event);
+                if (options.onError) options.onError(event);
+                reject(event);
+            };
+            
+            this.synth.speak(utterance);
+        });
     },
     
     /**
