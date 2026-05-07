@@ -738,7 +738,6 @@ var waiyanData = window.waiyanData = {
             { word: "hobby", phonetic: "/ˈhɒbi/", meaning: "爱好", example: "What's your hobby?", exampleCn: "你的爱好是什么？", tags: ["名词", "四会词"] },
             { word: "collect", phonetic: "/kəˈlekt/", meaning: "收集", example: "I collect stamps.", exampleCn: "我收集邮票。", tags: ["动词", "四会词"] },
             { word: "stamp", phonetic: "/stæmp/", meaning: "邮票", example: "I have many stamps.", exampleCn: "我有很多邮票。", tags: ["名词", "三会词"] },
-            { word: "hobby", phonetic: "/ˈhɒbi/", meaning: "爱好", example: "My hobby is reading.", exampleCn: "我的爱好是阅读。", tags: ["名词", "四会词"] },
             { word: "interest", phonetic: "/ˈɪntrəst/", meaning: "兴趣", example: "I have many interests.", exampleCn: "我有很多兴趣。", tags: ["名词", "三会词"] },
             { word: "enjoy", phonetic: "/ɪnˈdʒɔɪ/", meaning: "享受", example: "I enjoy reading.", exampleCn: "我喜欢阅读。", tags: ["动词", "四会词"] },
             { word: "prefer", phonetic: "/prɪˈfɜːr/", meaning: "更喜欢", example: "I prefer music.", exampleCn: "我更喜欢音乐。", tags: ["动词", "三会词"] },

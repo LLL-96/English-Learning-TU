@@ -1247,6 +1247,50 @@ var pepData = window.pepData = {
           texts: [
             { lesson: "Part A Let's talk", title: "过去与现在", content: [{ en: "There was no library in my old school.", cn: "我以前的学校没有图书馆。" }, { en: "Tell us about your school, please.", cn: "请给我们讲讲你的学校。" }] }
           ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Recycle 1 Review of Units 1-2",
+          words: [
+            { word: "younger", phonetic: "/ˈjʌŋɡər/", meaning: "更年轻的", example: "You are younger than me.", exampleCn: "你比我年轻。", tags: ["形容词", "四会词"] },
+            { word: "older", phonetic: "/ˈəʊldər/", meaning: "更年长的", example: "My brother is older than me.", exampleCn: "我哥哥比我大。", tags: ["形容词", "四会词"] },
+            { word: "taller", phonetic: "/ˈtɔːlər/", meaning: "更高的", example: "He is taller than before.", exampleCn: "他比以前更高了。", tags: ["形容词", "四会词"] },
+            { word: "shorter", phonetic: "/ˈʃɔːtər/", meaning: "更矮的", example: "The days are getting shorter.", exampleCn: "白天变短了。", tags: ["形容词", "四会词"] },
+            { word: "longer", phonetic: "/ˈlɒŋɡər/", meaning: "更长的", example: "The pencil is longer.", exampleCn: "这支铅笔更长。", tags: ["形容词", "四会词"] },
+            { word: "thinner", phonetic: "/ˈθɪnər/", meaning: "更瘦的", example: "He looks thinner.", exampleCn: "他看起来更瘦了。", tags: ["形容词", "三会词"] },
+            { word: "heavier", phonetic: "/ˈhevɪər/", meaning: "更重的", example: "The box is heavier.", exampleCn: "这个盒子更重。", tags: ["形容词", "三会词"] },
+            { word: "bigger", phonetic: "/ˈbɪɡər/", meaning: "更大的", example: "My shoes are bigger.", exampleCn: "我的鞋更大。", tags: ["形容词", "三会词"] },
+            { word: "smaller", phonetic: "/ˈsmɔːlər/", meaning: "更小的", example: "My hands are smaller.", exampleCn: "我的手更小。", tags: ["形容词", "三会词"] },
+            { word: "stronger", phonetic: "/ˈstrɒŋɡər/", meaning: "更强壮的", example: "I am stronger now.", exampleCn: "我现在更强壮了。", tags: ["形容词", "三会词"] },
+            { word: "went", phonetic: "/went/", meaning: "去（过去式）", example: "I went to the park.", exampleCn: "我去了公园。", tags: ["动词", "四会词"] },
+            { word: "camp", phonetic: "/kæmp/", meaning: "露营", example: "We went camping.", exampleCn: "我们去露营了。", tags: ["名词", "四会词"] },
+            { word: "rode", phonetic: "/rəʊd/", meaning: "骑（过去式）", example: "I rode a horse.", exampleCn: "我骑了马。", tags: ["动词", "四会词"] },
+            { word: "hurt", phonetic: "/hɜːt/", meaning: "受伤", example: "I hurt my foot.", exampleCn: "我伤了脚。", tags: ["动词", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Recycle 1", title: "复习 Units 1-2", content: [{ en: "How tall are you?", cn: "你有多高？" }, { en: "I'm 1.61 metres.", cn: "我1.61米。" }, { en: "Where did you go last weekend?", cn: "你上周末去哪了？" }, { en: "I went to a park.", cn: "我去了公园。" }] }
+          ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Recycle 2 Review of Units 3-4",
+          words: [
+            { word: "took", phonetic: "/tʊk/", meaning: "拍摄（过去式）", example: "I took lots of pictures.", exampleCn: "我拍了很多照片。", tags: ["动词", "四会词"] },
+            { word: "bought", phonetic: "/bɔːt/", meaning: "买（过去式）", example: "I bought some gifts.", exampleCn: "我买了一些礼物。", tags: ["动词", "四会词"] },
+            { word: "gift", phonetic: "/ɡɪft/", meaning: "礼物", example: "This is a gift for you.", exampleCn: "这是给你的礼物。", tags: ["名词", "四会词"] },
+            { word: "ate", phonetic: "/eɪt/", meaning: "吃（过去式）", example: "We ate fresh food.", exampleCn: "我们吃了新鲜食物。", tags: ["动词", "四会词"] },
+            { word: "fresh", phonetic: "/freʃ/", meaning: "新鲜的", example: "The food was fresh.", exampleCn: "食物很新鲜。", tags: ["形容词", "四会词"] },
+            { word: "beach", phonetic: "/biːtʃ/", meaning: "海滩", example: "We went to the beach.", exampleCn: "我们去了海滩。", tags: ["地点", "三会词"] },
+            { word: "basket", phonetic: "/ˈbɑːskɪt/", meaning: "篮子", example: "She carried a basket.", exampleCn: "她提着一个篮子。", tags: ["名词", "三会词"] },
+            { word: "part", phonetic: "/pɑːt/", meaning: "角色", example: "I played a part in the play.", exampleCn: "我在剧中扮演一个角色。", tags: ["名词", "三会词"] },
+            { word: "licked", phonetic: "/lɪkt/", meaning: "舔（过去式）", example: "The dog licked my hand.", exampleCn: "狗舔了我的手。", tags: ["动词", "三会词"] },
+            { word: "laughed", phonetic: "/lɑːft/", meaning: "笑（过去式）", example: "We laughed a lot.", exampleCn: "我们笑得很开心。", tags: ["动词", "三会词"] },
+            { word: "library", phonetic: "/ˈlaɪbrəri/", meaning: "图书馆", example: "There was no library.", exampleCn: "以前没有图书馆。", tags: ["地点", "四会词"] },
+            { word: "change", phonetic: "/tʃeɪndʒ/", meaning: "变化", example: "There are many changes.", exampleCn: "有很多变化。", tags: ["名词", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Recycle 2", title: "复习 Units 3-4", content: [{ en: "Where did you go over the winter holiday?", cn: "你寒假去哪了？" }, { en: "I went to Sanya.", cn: "我去了三亚。" }, { en: "How did you go there?", cn: "你怎么去的？" }, { en: "We went there by plane.", cn: "我们坐飞机去的。" }, { en: "There was no gym in my school twenty years ago.", cn: "二十年前我们学校没有体育馆。" }, { en: "Now there is a new one.", cn: "现在有一个新的了。" }] }
+          ]
         }
       ]
     }

@@ -207,12 +207,13 @@ function setupEventListeners() {
         });
     });
 
-    // 单元选择
+    // 单元选择（使用 closest 处理子元素点击）
     document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('unit-btn')) {
+        const unitBtn = e.target.closest('.unit-btn');
+        if (unitBtn) {
             document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            state.currentUnit = parseInt(e.target.dataset.unit);
+            unitBtn.classList.add('active');
+            state.currentUnit = parseInt(unitBtn.dataset.unit);
             state.currentWordIndex = 0;
             state.currentTextIndex = 0;
             saveToStorage();

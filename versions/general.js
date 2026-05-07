@@ -1104,6 +1104,36 @@ var generalData = window.generalData = {
           texts: [
             { lesson: "Part A", title: "Clothes", content: [{ en: "I have a new jacket.", cn: "我有一件新夹克衫。" }, { en: "It's very nice.", cn: "它很漂亮。" }] }
           ]
+        },
+        {
+          unitId: "U4",
+          unitName: "Unit 4 Sports",
+          words: [
+            { word: "football", phonetic: "/ˈfʊtbɔːl/", meaning: "足球", example: "I play football.", exampleCn: "我踢足球。", tags: ["运动", "四会词"] },
+            { word: "basketball", phonetic: "/ˈbɑːskɪtbɔːl/", meaning: "篮球", example: "I play basketball.", exampleCn: "我打篮球。", tags: ["运动", "四会词"] },
+            { word: "ping-pong", phonetic: "/pɪŋ pɒŋ/", meaning: "乒乓球", example: "I play ping-pong.", exampleCn: "我打乒乓球。", tags: ["运动", "四会词"] },
+            { word: "swim", phonetic: "/swɪm/", meaning: "游泳", example: "I can swim.", exampleCn: "我会游泳。", tags: ["运动", "四会词"] },
+            { word: "run", phonetic: "/rʌn/", meaning: "跑", example: "I can run fast.", exampleCn: "我跑得快。", tags: ["运动", "四会词"] },
+            { word: "jump", phonetic: "/dʒʌmp/", meaning: "跳", example: "I can jump high.", exampleCn: "我跳得高。", tags: ["运动", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Sports", content: [{ en: "Can you play football?", cn: "你会踢足球吗？" }, { en: "Yes, I can.", cn: "是的，我会。" }] }
+          ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Unit 5 Transportation",
+          words: [
+            { word: "bus", phonetic: "/bʌs/", meaning: "公共汽车", example: "I go by bus.", exampleCn: "我坐公共汽车去。", tags: ["交通", "四会词"] },
+            { word: "car", phonetic: "/kɑːr/", meaning: "汽车", example: "I go by car.", exampleCn: "我坐汽车去。", tags: ["交通", "四会词"] },
+            { word: "bike", phonetic: "/baɪk/", meaning: "自行车", example: "I go by bike.", exampleCn: "我骑自行车去。", tags: ["交通", "四会词"] },
+            { word: "train", phonetic: "/treɪn/", meaning: "火车", example: "I go by train.", exampleCn: "我坐火车去。", tags: ["交通", "四会词"] },
+            { word: "plane", phonetic: "/pleɪn/", meaning: "飞机", example: "I go by plane.", exampleCn: "我坐飞机去。", tags: ["交通", "四会词"] },
+            { word: "ship", phonetic: "/ʃɪp/", meaning: "轮船", example: "I go by ship.", exampleCn: "我坐轮船去。", tags: ["交通", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Transportation", content: [{ en: "How do you go to school?", cn: "你怎么去学校？" }, { en: "I go by bus.", cn: "我坐公共汽车。" }] }
+          ]
         }
       ]
     },
@@ -1152,6 +1182,36 @@ var generalData = window.generalData = {
           texts: [
             { lesson: "Part A", title: "Zoo", content: [{ en: "Look at the elephants!", cn: "看大象！" }, { en: "They're so big!", cn: "它们真大！" }] }
           ]
+        },
+        {
+          unitId: "U4",
+          unitName: "Unit 4 My family",
+          words: [
+            { word: "father", phonetic: "/ˈfɑːðər/", meaning: "父亲", example: "This is my father.", exampleCn: "这是我爸爸。", tags: ["家庭", "四会词"] },
+            { word: "mother", phonetic: "/ˈmʌðər/", meaning: "母亲", example: "This is my mother.", exampleCn: "这是我妈妈。", tags: ["家庭", "四会词"] },
+            { word: "brother", phonetic: "/ˈbrʌðər/", meaning: "兄弟", example: "This is my brother.", exampleCn: "这是我兄弟。", tags: ["家庭", "四会词"] },
+            { word: "sister", phonetic: "/ˈsɪstər/", meaning: "姐妹", example: "This is my sister.", exampleCn: "这是我姐妹。", tags: ["家庭", "四会词"] },
+            { word: "grandfather", phonetic: "/ˈɡrændfɑːðər/", meaning: "祖父", example: "This is my grandfather.", exampleCn: "这是我爷爷。", tags: ["家庭", "四会词"] },
+            { word: "grandmother", phonetic: "/ˈɡrændmʌðər/", meaning: "祖母", example: "This is my grandmother.", exampleCn: "这是我奶奶。", tags: ["家庭", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Family", content: [{ en: "Who's that man?", cn: "那个男人是谁？" }, { en: "He's my father.", cn: "他是我爸爸。" }] }
+          ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Unit 5 Numbers",
+          words: [
+            { word: "eleven", phonetic: "/ɪˈlevən/", meaning: "十一", example: "I have eleven pens.", exampleCn: "我有十一支钢笔。", tags: ["数字", "四会词"] },
+            { word: "twelve", phonetic: "/twelv/", meaning: "十二", example: "I have twelve books.", exampleCn: "我有十二本书。", tags: ["数字", "四会词"] },
+            { word: "thirteen", phonetic: "/ˌθɜːrˈtiːn/", meaning: "十三", example: "I'm thirteen.", exampleCn: "我十三岁了。", tags: ["数字", "四会词"] },
+            { word: "fourteen", phonetic: "/ˌfɔːrˈtiːn/", meaning: "十四", example: "I'm fourteen.", exampleCn: "我十四岁了。", tags: ["数字", "四会词"] },
+            { word: "fifteen", phonetic: "/ˌfɪfˈtiːn/", meaning: "十五", example: "I'm fifteen.", exampleCn: "我十五岁了。", tags: ["数字", "四会词"] },
+            { word: "twenty", phonetic: "/ˈtwenti/", meaning: "二十", example: "I have twenty crayons.", exampleCn: "我有二十支蜡笔。", tags: ["数字", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Numbers", content: [{ en: "How many kites do you see?", cn: "你看到多少只风筝？" }, { en: "I see twelve.", cn: "我看到十二只。" }] }
+          ]
         }
       ]
     },
@@ -1199,6 +1259,38 @@ var generalData = window.generalData = {
           ],
           texts: [
             { lesson: "Part A", title: "Weather", content: [{ en: "What's the weather like?", cn: "天气怎么样？" }, { en: "It's sunny and warm.", cn: "天气晴朗且温暖。" }] }
+          ]
+        },
+        {
+          unitId: "U4",
+          unitName: "Unit 4 Farm",
+          words: [
+            { word: "tomato", phonetic: "/təˈmɑːtəʊ/", meaning: "番茄", example: "I like tomatoes.", exampleCn: "我喜欢番茄。", tags: ["蔬菜", "四会词"] },
+            { word: "potato", phonetic: "/pəˈteɪtəʊ/", meaning: "土豆", example: "I like potatoes.", exampleCn: "我喜欢土豆。", tags: ["蔬菜", "四会词"] },
+            { word: "carrot", phonetic: "/ˈkærət/", meaning: "胡萝卜", example: "I like carrots.", exampleCn: "我喜欢胡萝卜。", tags: ["蔬菜", "四会词"] },
+            { word: "green beans", phonetic: "/ɡriːn biːnz/", meaning: "青豆", example: "I like green beans.", exampleCn: "我喜欢青豆。", tags: ["蔬菜", "四会词"] },
+            { word: "horse", phonetic: "/hɔːrs/", meaning: "马", example: "I can ride a horse.", exampleCn: "我会骑马。", tags: ["动物", "四会词"] },
+            { word: "cow", phonetic: "/kaʊ/", meaning: "奶牛", example: "The cow gives milk.", exampleCn: "奶牛产奶。", tags: ["动物", "三会词"] },
+            { word: "sheep", phonetic: "/ʃiːp/", meaning: "绵羊", example: "The sheep is white.", exampleCn: "绵羊是白色的。", tags: ["动物", "四会词"] },
+            { word: "hen", phonetic: "/hen/", meaning: "母鸡", example: "The hen has eggs.", exampleCn: "母鸡有蛋。", tags: ["动物", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Farm", content: [{ en: "Are these carrots?", cn: "这些是胡萝卜吗？" }, { en: "Yes, they are.", cn: "是的，它们是。" }] }
+          ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Unit 5 Shopping",
+          words: [
+            { word: "clothes", phonetic: "/kləʊðz/", meaning: "衣服", example: "I need new clothes.", exampleCn: "我需要新衣服。", tags: ["服装", "四会词"] },
+            { word: "pants", phonetic: "/pænts/", meaning: "裤子", example: "I like these pants.", exampleCn: "我喜欢这条裤子。", tags: ["服装", "四会词"] },
+            { word: "hat", phonetic: "/hæt/", meaning: "帽子", example: "I like this hat.", exampleCn: "我喜欢这顶帽子。", tags: ["服装", "四会词"] },
+            { word: "dress", phonetic: "/dres/", meaning: "连衣裙", example: "I like this dress.", exampleCn: "我喜欢这条裙子。", tags: ["服装", "四会词"] },
+            { word: "skirt", phonetic: "/skɜːrt/", meaning: "短裙", example: "I like this skirt.", exampleCn: "我喜欢这条短裙。", tags: ["服装", "四会词"] },
+            { word: "help", phonetic: "/help/", meaning: "帮助", example: "Can I help you?", exampleCn: "我能帮你吗？", tags: ["动词", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Shopping", content: [{ en: "Can I help you?", cn: "我能帮你吗？" }, { en: "Yes. I want a dress.", cn: "是的，我想要一条连衣裙。" }] }
           ]
         }
       ]
@@ -1249,6 +1341,40 @@ var generalData = window.generalData = {
           texts: [
             { lesson: "Part A", title: "Calendar", content: [{ en: "When is Tree Planting Day?", cn: "植树节是什么时候？" }, { en: "It's in March.", cn: "在三月。" }] }
           ]
+        },
+        {
+          unitId: "U4",
+          unitName: "Unit 4 Easter",
+          words: [
+            { word: "June", phonetic: "/dʒuːn/", meaning: "六月", example: "Children's Day is in June.", exampleCn: "儿童节在六月。", tags: ["时间", "四会词"] },
+            { word: "July", phonetic: "/dʒuˈlaɪ/", meaning: "七月", example: "Summer vacation is in July.", exampleCn: "暑假在七月。", tags: ["时间", "四会词"] },
+            { word: "August", phonetic: "/ˈɔːɡəst/", meaning: "八月", example: "We swim in August.", exampleCn: "我们在八月游泳。", tags: ["时间", "四会词"] },
+            { word: "September", phonetic: "/sepˈtembər/", meaning: "九月", example: "School starts in September.", exampleCn: "九月开学。", tags: ["时间", "四会词"] },
+            { word: "October", phonetic: "/ɒkˈtəʊbər/", meaning: "十月", example: "National Day is in October.", exampleCn: "国庆节在十月。", tags: ["时间", "四会词"] },
+            { word: "November", phonetic: "/nəʊˈvembər/", meaning: "十一月", example: "Thanksgiving is in November.", exampleCn: "感恩节在十一月。", tags: ["时间", "三会词"] },
+            { word: "December", phonetic: "/dɪˈsembər/", meaning: "十二月", example: "Christmas is in December.", exampleCn: "圣诞节在十二月。", tags: ["时间", "四会词"] },
+            { word: "Easter", phonetic: "/ˈiːstər/", meaning: "复活节", example: "Easter is in April.", exampleCn: "复活节在四月。", tags: ["节日", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Months", content: [{ en: "When is summer vacation?", cn: "暑假是什么时候？" }, { en: "It's in July and August.", cn: "在七月和八月。" }] }
+          ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Unit 5 My room",
+          words: [
+            { word: "mine", phonetic: "/maɪn/", meaning: "我的", example: "This book is mine.", exampleCn: "这本书是我的。", tags: ["代词", "四会词"] },
+            { word: "yours", phonetic: "/jɔːrz/", meaning: "你的", example: "Is this yours?", exampleCn: "这是你的吗？", tags: ["代词", "四会词"] },
+            { word: "his", phonetic: "/hɪz/", meaning: "他的", example: "This is his bag.", exampleCn: "这是他的包。", tags: ["代词", "四会词"] },
+            { word: "hers", phonetic: "/hɜːrz/", meaning: "她的", example: "This is hers.", exampleCn: "这是她的。", tags: ["代词", "四会词"] },
+            { word: "theirs", phonetic: "/ðeərz/", meaning: "他们的", example: "These are theirs.", exampleCn: "这些是他们的。", tags: ["代词", "三会词"] },
+            { word: "ours", phonetic: "/ˈaʊərz/", meaning: "我们的", example: "This is ours.", exampleCn: "这是我们的。", tags: ["代词", "三会词"] },
+            { word: "climbing", phonetic: "/ˈklaɪmɪŋ/", meaning: "攀爬", example: "The cat is climbing.", exampleCn: "猫在攀爬。", tags: ["动词", "四会词"] },
+            { word: "eating", phonetic: "/ˈiːtɪŋ/", meaning: "吃", example: "The dog is eating.", exampleCn: "狗在吃东西。", tags: ["动词", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Possession", content: [{ en: "Whose book is this?", cn: "这是谁的书？" }, { en: "It's mine.", cn: "是我的。" }] }
+          ]
         }
       ]
     },
@@ -1298,6 +1424,40 @@ var generalData = window.generalData = {
           ],
           texts: [
             { lesson: "Part A", title: "Trip", content: [{ en: "Where did you go?", cn: "你去了哪里？" }, { en: "I went to Turpan.", cn: "我去了吐鲁番。" }] }
+          ]
+        },
+        {
+          unitId: "U4",
+          unitName: "Unit 4 Then and now",
+          words: [
+            { word: "dining hall", phonetic: "/ˈdaɪnɪŋ hɔːl/", meaning: "饭厅", example: "There was no dining hall.", exampleCn: "以前没有饭厅。", tags: ["地点", "四会词"] },
+            { word: "grass", phonetic: "/ɡrɑːs/", meaning: "草坪", example: "There was no grass.", exampleCn: "以前没有草坪。", tags: ["自然", "四会词"] },
+            { word: "gym", phonetic: "/dʒɪm/", meaning: "体育馆", example: "There was no gym.", exampleCn: "以前没有体育馆。", tags: ["地点", "四会词"] },
+            { word: "ago", phonetic: "/əˈɡəʊ/", meaning: "以前", example: "twenty years ago", exampleCn: "二十年前", tags: ["时间", "四会词"] },
+            { word: "change", phonetic: "/tʃeɪndʒ/", meaning: "变化", example: "There are many changes.", exampleCn: "有很多变化。", tags: ["名词", "四会词"] },
+            { word: "different", phonetic: "/ˈdɪfrənt/", meaning: "不同的", example: "Things are different now.", exampleCn: "现在情况不同了。", tags: ["形容词", "三会词"] },
+            { word: "easy", phonetic: "/ˈiːzi/", meaning: "容易的", example: "It was easy.", exampleCn: "那很容易。", tags: ["形容词", "三会词"] },
+            { word: "before", phonetic: "/bɪˈfɔːr/", meaning: "以前", example: "Before I was short.", exampleCn: "以前我很矮。", tags: ["时间", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Changes", content: [{ en: "There was no gym in my school before.", cn: "以前我们学校没有体育馆。" }, { en: "Now there is a new one.", cn: "现在有一个新的了。" }] }
+          ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Unit 5 Farewell",
+          words: [
+            { word: "leave", phonetic: "/liːv/", meaning: "离开", example: "We will leave school.", exampleCn: "我们将离开学校。", tags: ["动词", "四会词"] },
+            { word: "miss", phonetic: "/mɪs/", meaning: "想念", example: "I will miss you.", exampleCn: "我会想念你的。", tags: ["动词", "四会词"] },
+            { word: "friend", phonetic: "/frend/", meaning: "朋友", example: "You are my best friend.", exampleCn: "你是我最好的朋友。", tags: ["人物", "四会词"] },
+            { word: "remember", phonetic: "/rɪˈmembər/", meaning: "记住", example: "Remember our good times.", exampleCn: "记住我们的美好时光。", tags: ["动词", "四会词"] },
+            { word: "future", phonetic: "/ˈfjuːtʃər/", meaning: "未来", example: "I hope for a bright future.", exampleCn: "我希望有光明的未来。", tags: ["名词", "三会词"] },
+            { word: "wish", phonetic: "/wɪʃ/", meaning: "祝愿", example: "I wish you happiness.", exampleCn: "我祝你幸福。", tags: ["动词", "四会词"] },
+            { word: "hope", phonetic: "/həʊp/", meaning: "希望", example: "I hope to see you again.", exampleCn: "我希望再见到你。", tags: ["动词", "四会词"] },
+            { word: "goodbye", phonetic: "/ɡʊdˈbaɪ/", meaning: "再见", example: "Goodbye, my friends!", exampleCn: "再见，我的朋友们！", tags: ["日常", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Farewell", content: [{ en: "We will leave school soon.", cn: "我们很快就要毕业了。" }, { en: "I will miss you all.", cn: "我会想念你们所有人的。" }] }
           ]
         }
       ]
