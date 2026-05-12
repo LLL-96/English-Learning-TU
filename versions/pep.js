@@ -982,12 +982,8 @@ var pepData = window.pepData = {
             { word: "attention", phonetic: "/əˈtenʃn/", meaning: "注意", example: "Pay attention to the traffic lights.", exampleCn: "注意交通信号灯。", tags: ["名词", "三会词"] },
             { word: "traffic", phonetic: "/ˈtræfɪk/", meaning: "交通", example: "traffic lights", exampleCn: "交通信号灯", tags: ["交通", "三会词"] },
             { word: "traffic lights", phonetic: "/ˈtræfɪk laɪts/", meaning: "交通信号灯", example: "Pay attention to the traffic lights.", exampleCn: "注意交通信号灯。", tags: ["交通", "三会词"] },
-            { word: "Munich", phonetic: "/ˈmjuːnɪk/", meaning: "慕尼黑", example: "I'm from Munich.", exampleCn: "我来自慕尼黑。", tags: ["城市", "三会词"] },
             { word: "Germany", phonetic: "/ˈdʒɜːrməni/", meaning: "德国", example: "Munich is in Germany.", exampleCn: "慕尼黑在德国。", tags: ["国家", "三会词"] },
-            { word: "helmet", phonetic: "/ˈhelmɪt/", meaning: "头盔", example: "In the USA people on bikes must wear a helmet.", exampleCn: "在美国骑自行车的人必须戴头盔。", tags: ["物品", "三会词"] },
-            { word: "must", phonetic: "/mʌst/", meaning: "必须", example: "You must pay attention.", exampleCn: "你必须注意。", tags: ["情态动词", "三会词"] },
-            { word: "attention", phonetic: "/əˈtenʃn/", meaning: "注意", example: "Pay attention to the traffic lights.", exampleCn: "注意交通信号灯。", tags: ["名词", "三会词"] },
-            { word: "traffic", phonetic: "/ˈtræfɪk/", meaning: "交通", example: "traffic lights", exampleCn: "交通信号灯", tags: ["交通", "三会词"] }
+            { word: "helmet", phonetic: "/ˈhelmɪt/", meaning: "头盔", example: "In the USA people on bikes must wear a helmet.", exampleCn: "在美国骑自行车的人必须戴头盔。", tags: ["物品", "三会词"] }
           ],
           texts: [
             { lesson: "Part A Let's talk", title: "上学方式", content: [{ en: "How do you come to school?", cn: "你怎么来学校的？" }, { en: "Usually, I come on foot.", cn: "通常我步行来。" }] }

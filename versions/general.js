@@ -975,10 +975,34 @@ var generalData = window.generalData = {
               ]
             }
           ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 Dreams & Goals",
+          words: [
+            { word: "dream", phonetic: "/driːm/", meaning: "梦想", example: "My dream is to be a doctor.", exampleCn: "我的梦想是当医生。", tags: ["名词", "四会词"] },
+            { word: "goal", phonetic: "/ɡəʊl/", meaning: "目标", example: "What's your goal?", exampleCn: "你的目标是什么？", tags: ["名词", "四会词"] },
+            { word: "believe", phonetic: "/bɪˈliːv/", meaning: "相信", example: "I believe I can.", exampleCn: "我相信我可以。", tags: ["动词", "四会词"] },
+            { word: "hard-working", phonetic: "/ˌhɑːd ˈwɜːkɪŋ/", meaning: "努力工作的", example: "She is hard-working.", exampleCn: "她很努力。", tags: ["形容词", "四会词"] },
+            { word: "success", phonetic: "/səkˈses/", meaning: "成功", example: "Work hard for success.", exampleCn: "为成功而努力。", tags: ["名词", "三会词"] },
+            { word: "try", phonetic: "/traɪ/", meaning: "尝试", example: "Try your best!", exampleCn: "尽你最大的努力！", tags: ["动词", "四会词"] },
+            { word: "important", phonetic: "/ɪmˈpɔːrtənt/", meaning: "重要的", example: "It's important to study.", exampleCn: "学习很重要。", tags: ["形容词", "三会词"] },
+            { word: "never give up", phonetic: "/ˈnevə ɡɪv ʌp/", meaning: "永不放弃", example: "Never give up!", exampleCn: "永不放弃！", tags: ["短语", "四会词"] }
+          ],
+          texts: [
+            {
+              lesson: "Part A",
+              title: "Dreams",
+              content: [
+                { en: "What's your dream?", cn: "你的梦想是什么？" },
+                { en: "I want to be a scientist.", cn: "我想成为一名科学家。" },
+                { en: "Work hard and never give up!", cn: "努力，永不放弃！" }
+              ]
+            }
+          ]
         }
       ]
     },
-    // ==================== 一年级下册 ====================
     "1-2": {
       semester: "下册",
       units: [
@@ -1048,6 +1072,40 @@ var generalData = window.generalData = {
           ],
           texts: [
             { lesson: "Part A", title: "Home", content: [{ en: "Where is the bedroom?", cn: "卧室在哪里？" }, { en: "It's on the second floor.", cn: "它在二楼。" }] }
+          ]
+        },
+        {
+          unitId: "U5",
+          unitName: "Unit 5 Body Parts",
+          words: [
+            { word: "head", phonetic: "/hed/", meaning: "头", example: "Touch your head.", exampleCn: "摸摸你的头。", tags: ["身体", "四会词"] },
+            { word: "face", phonetic: "/feɪs/", meaning: "脸", example: "Wash your face.", exampleCn: "洗洗你的脸。", tags: ["身体", "四会词"] },
+            { word: "eye", phonetic: "/aɪ/", meaning: "眼睛", example: "I have two eyes.", exampleCn: "我有两只眼睛。", tags: ["身体", "四会词"] },
+            { word: "ear", phonetic: "/ɪər/", meaning: "耳朵", example: "I have two ears.", exampleCn: "我有两只耳朵。", tags: ["身体", "四会词"] },
+            { word: "nose", phonetic: "/nəʊz/", meaning: "鼻子", example: "This is my nose.", exampleCn: "这是我的鼻子。", tags: ["身体", "四会词"] },
+            { word: "mouth", phonetic: "/maʊθ/", meaning: "嘴巴", example: "Open your mouth.", exampleCn: "张开你的嘴巴。", tags: ["身体", "四会词"] },
+            { word: "hand", phonetic: "/hænd/", meaning: "手", example: "Wave your hands.", exampleCn: "挥挥你的手。", tags: ["身体", "四会词"] },
+            { word: "foot", phonetic: "/fʊt/", meaning: "脚", example: "Stamp your foot.", exampleCn: "跺跺脚。", tags: ["身体", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Body Parts", content: [{ en: "Touch your head.", cn: "摸摸你的头。" }, { en: "Touch your nose.", cn: "摸摸你的鼻子。" }] }
+          ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 Nature",
+          words: [
+            { word: "tree", phonetic: "/triː/", meaning: "树", example: "The tree is tall.", exampleCn: "树很高。", tags: ["自然", "四会词"] },
+            { word: "flower", phonetic: "/ˈflaʊər/", meaning: "花", example: "The flower is pretty.", exampleCn: "花很漂亮。", tags: ["自然", "四会词"] },
+            { word: "grass", phonetic: "/ɡrɑːs/", meaning: "草", example: "The grass is green.", exampleCn: "草是绿色的。", tags: ["自然", "四会词"] },
+            { word: "river", phonetic: "/ˈrɪvər/", meaning: "河流", example: "The river is long.", exampleCn: "河流很长。", tags: ["自然", "三会词"] },
+            { word: "sky", phonetic: "/skaɪ/", meaning: "天空", example: "The sky is blue.", exampleCn: "天空是蓝色的。", tags: ["自然", "三会词"] },
+            { word: "sun", phonetic: "/sʌn/", meaning: "太阳", example: "The sun is hot.", exampleCn: "太阳很热。", tags: ["自然", "四会词"] },
+            { word: "moon", phonetic: "/muːn/", meaning: "月亮", example: "The moon is bright.", exampleCn: "月亮很亮。", tags: ["自然", "三会词"] },
+            { word: "star", phonetic: "/stɑːr/", meaning: "星星", example: "I see a star.", exampleCn: "我看见一颗星星。", tags: ["自然", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Nature", content: [{ en: "Look at the tree.", cn: "看那棵树。" }, { en: "It's tall and green.", cn: "它又高又绿。" }] }
           ]
         }
       ]
@@ -1134,6 +1192,23 @@ var generalData = window.generalData = {
           texts: [
             { lesson: "Part A", title: "Transportation", content: [{ en: "How do you go to school?", cn: "你怎么去学校？" }, { en: "I go by bus.", cn: "我坐公共汽车。" }] }
           ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 Food & Drink",
+          words: [
+            { word: "rice", phonetic: "/raɪs/", meaning: "米饭", example: "I like rice.", exampleCn: "我喜欢米饭。", tags: ["食物", "四会词"] },
+            { word: "bread", phonetic: "/bred/", meaning: "面包", example: "Have some bread.", exampleCn: "吃点面包。", tags: ["食物", "四会词"] },
+            { word: "egg", phonetic: "/eɡ/", meaning: "鸡蛋", example: "I like eggs.", exampleCn: "我喜欢鸡蛋。", tags: ["食物", "四会词"] },
+            { word: "milk", phonetic: "/mɪlk/", meaning: "牛奶", example: "Drink some milk.", exampleCn: "喝点牛奶。", tags: ["饮料", "四会词"] },
+            { word: "juice", phonetic: "/dʒuːs/", meaning: "果汁", example: "I like apple juice.", exampleCn: "我喜欢苹果汁。", tags: ["饮料", "四会词"] },
+            { word: "water", phonetic: "/ˈwɔːtər/", meaning: "水", example: "I drink water.", exampleCn: "我喝水。", tags: ["饮料", "四会词"] },
+            { word: "cake", phonetic: "/keɪk/", meaning: "蛋糕", example: "I like cake.", exampleCn: "我喜欢蛋糕。", tags: ["食物", "四会词"] },
+            { word: "fish", phonetic: "/fɪʃ/", meaning: "鱼", example: "I like fish.", exampleCn: "我喜欢鱼。", tags: ["食物", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Food", content: [{ en: "What do you like?", cn: "你喜欢什么？" }, { en: "I like rice and fish.", cn: "我喜欢米饭和鱼。" }] }
+          ]
         }
       ]
     },
@@ -1211,6 +1286,21 @@ var generalData = window.generalData = {
           ],
           texts: [
             { lesson: "Part A", title: "Numbers", content: [{ en: "How many kites do you see?", cn: "你看到多少只风筝？" }, { en: "I see twelve.", cn: "我看到十二只。" }] }
+          ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 My room",
+          words: [
+            { word: "sofa", phonetic: "/ˈsəʊfə/", meaning: "沙发", example: "Sit on the sofa.", exampleCn: "坐在沙发上。", tags: ["家具", "四会词"] },
+            { word: "fridge", phonetic: "/frɪdʒ/", meaning: "冰箱", example: "The food is in the fridge.", exampleCn: "食物在冰箱里。", tags: ["家具", "三会词"] },
+            { word: "TV", phonetic: "/ˌtiː ˈviː/", meaning: "电视", example: "I watch TV.", exampleCn: "我看电视。", tags: ["物品", "四会词"] },
+            { word: "computer", phonetic: "/kəmˈpjuːtər/", meaning: "电脑", example: "I use the computer.", exampleCn: "我用电脑。", tags: ["物品", "四会词"] },
+            { word: "lamp", phonetic: "/læmp/", meaning: "台灯", example: "Turn on the lamp.", exampleCn: "打开台灯。", tags: ["物品", "三会词"] },
+            { word: "mirror", phonetic: "/ˈmɪrər/", meaning: "镜子", example: "Look in the mirror.", exampleCn: "照镜子。", tags: ["物品", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "My Room", content: [{ en: "What's in your room?", cn: "你的房间里有什么？" }, { en: "A bed, a desk and a lamp.", cn: "一张床、一张桌子和一盏台灯。" }] }
           ]
         }
       ]
@@ -1291,6 +1381,23 @@ var generalData = window.generalData = {
           ],
           texts: [
             { lesson: "Part A", title: "Shopping", content: [{ en: "Can I help you?", cn: "我能帮你吗？" }, { en: "Yes. I want a dress.", cn: "是的，我想要一条连衣裙。" }] }
+          ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 At the playground",
+          words: [
+            { word: "playground", phonetic: "/ˈpleɪɡraʊnd/", meaning: "操场", example: "Let's go to the playground.", exampleCn: "我们去操场吧。", tags: ["地点", "四会词"] },
+            { word: "slide", phonetic: "/slaɪd/", meaning: "滑梯", example: "I like the slide.", exampleCn: "我喜欢滑梯。", tags: ["设施", "三会词"] },
+            { word: "swing", phonetic: "/swɪŋ/", meaning: "秋千", example: "I like the swing.", exampleCn: "我喜欢秋千。", tags: ["设施", "三会词"] },
+            { word: "seesaw", phonetic: "/ˈsiːsɔː/", meaning: "跷跷板", example: "Let's play on the seesaw.", exampleCn: "我们玩跷跷板吧。", tags: ["设施", "三会词"] },
+            { word: "catch", phonetic: "/kætʃ/", meaning: "接住", example: "Catch the ball!", exampleCn: "接住球！", tags: ["动词", "四会词"] },
+            { word: "throw", phonetic: "/θrəʊ/", meaning: "扔", example: "Throw the ball.", exampleCn: "扔球。", tags: ["动词", "四会词"] },
+            { word: "kick", phonetic: "/kɪk/", meaning: "踢", example: "Kick the ball.", exampleCn: "踢球。", tags: ["动词", "三会词"] },
+            { word: "team", phonetic: "/tiːm/", meaning: "队", example: "We are a team.", exampleCn: "我们是一个队。", tags: ["名词", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Playground", content: [{ en: "What can you do?", cn: "你会做什么？" }, { en: "I can catch and throw.", cn: "我会接球和扔球。" }] }
           ]
         }
       ]
@@ -1375,6 +1482,23 @@ var generalData = window.generalData = {
           texts: [
             { lesson: "Part A", title: "Possession", content: [{ en: "Whose book is this?", cn: "这是谁的书？" }, { en: "It's mine.", cn: "是我的。" }] }
           ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 Rules & Manners",
+          words: [
+            { word: "rule", phonetic: "/ruːl/", meaning: "规则", example: "Follow the rules.", exampleCn: "遵守规则。", tags: ["名词", "四会词"] },
+            { word: "quiet", phonetic: "/ˈkwaɪət/", meaning: "安静的", example: "Be quiet, please.", exampleCn: "请安静。", tags: ["形容词", "四会词"] },
+            { word: "polite", phonetic: "/pəˈlaɪt/", meaning: "有礼貌的", example: "Be polite.", exampleCn: "要有礼貌。", tags: ["形容词", "四会词"] },
+            { word: "careful", phonetic: "/ˈkeəfl/", meaning: "小心的", example: "Be careful!", exampleCn: "小心！", tags: ["形容词", "四会词"] },
+            { word: "dangerous", phonetic: "/ˈdeɪndʒərəs/", meaning: "危险的", example: "It's dangerous.", exampleCn: "很危险。", tags: ["形容词", "三会词"] },
+            { word: "safe", phonetic: "/seɪf/", meaning: "安全的", example: "Keep safe.", exampleCn: "注意安全。", tags: ["形容词", "三会词"] },
+            { word: "listen to", phonetic: "/ˈlɪsn tuː/", meaning: "听", example: "Listen to the teacher.", exampleCn: "听老师讲。", tags: ["短语", "四会词"] },
+            { word: "wait in line", phonetic: "/weɪt ɪn laɪn/", meaning: "排队", example: "Please wait in line.", exampleCn: "请排队。", tags: ["短语", "三会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Rules", content: [{ en: "What should we do?", cn: "我们应该怎么做？" }, { en: "We should be quiet in the library.", cn: "我们在图书馆应该安静。" }] }
+          ]
         }
       ]
     },
@@ -1458,6 +1582,23 @@ var generalData = window.generalData = {
           ],
           texts: [
             { lesson: "Part A", title: "Farewell", content: [{ en: "We will leave school soon.", cn: "我们很快就要毕业了。" }, { en: "I will miss you all.", cn: "我会想念你们所有人的。" }] }
+          ]
+        },
+        {
+          unitId: "U6",
+          unitName: "Unit 6 Summer plans",
+          words: [
+            { word: "summer vacation", phonetic: "/ˈsʌmər veɪˈkeɪʃn/", meaning: "暑假", example: "Summer vacation is coming.", exampleCn: "暑假快到了。", tags: ["时间", "四会词"] },
+            { word: "camp", phonetic: "/kæmp/", meaning: "露营", example: "I will go to camp.", exampleCn: "我要去露营。", tags: ["活动", "四会词"] },
+            { word: "trip", phonetic: "/trɪp/", meaning: "旅行", example: "I will take a trip.", exampleCn: "我要去旅行。", tags: ["活动", "四会词"] },
+            { word: "swim", phonetic: "/swɪm/", meaning: "游泳", example: "I will swim in the sea.", exampleCn: "我要在海里游泳。", tags: ["活动", "四会词"] },
+            { word: "read books", phonetic: "/riːd bʊks/", meaning: "读书", example: "I will read books.", exampleCn: "我要读书。", tags: ["活动", "三会词"] },
+            { word: "learn", phonetic: "/lɜːn/", meaning: "学习", example: "I will learn to cook.", exampleCn: "我要学做饭。", tags: ["动词", "四会词"] },
+            { word: "excited", phonetic: "/ɪkˈsaɪtɪd/", meaning: "兴奋的", example: "I'm so excited!", exampleCn: "我太兴奋了！", tags: ["形容词", "四会词"] },
+            { word: "fun", phonetic: "/fʌn/", meaning: "乐趣", example: "Have fun!", exampleCn: "玩得开心！", tags: ["名词", "四会词"] }
+          ],
+          texts: [
+            { lesson: "Part A", title: "Summer Plans", content: [{ en: "What will you do this summer?", cn: "今年夏天你打算做什么？" }, { en: "I will go camping with my family.", cn: "我要和家人去露营。" }] }
           ]
         }
       ]

@@ -1,7 +1,7 @@
 // Service Worker for 小学英语同步学习平台
 // 实现离线访问功能 - 优化版本
 
-const CACHE_VERSION = '11.0';
+const CACHE_VERSION = '13.0';
 const CACHE_NAME = `english-cs-v${CACHE_VERSION}`;
 
 // 核心资源 - 优先缓存
